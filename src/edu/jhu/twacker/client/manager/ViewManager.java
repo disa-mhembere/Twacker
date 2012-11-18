@@ -12,7 +12,8 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 
-import edu.jhu.twacker.client.view.LoginView;
+import edu.jhu.twacker.client.view.HomeView;
+import edu.jhu.twacker.client.view.AuthView;
 import edu.jhu.twacker.client.view.View;
 import edu.jhu.twacker.client.view.ViewEnum;
 
@@ -22,53 +23,52 @@ import edu.jhu.twacker.client.view.ViewEnum;
  */
 public class ViewManager implements ValueChangeHandler<String>
 {
-
 	private static ViewManager instance;
-
-	private static HashMap <ViewEnum, View> allViews;
+	private static HashMap <ViewEnum, View> allViews; // Map of all views & corresponding Enums
+	
 	/**
+	 * 
 	 * Private constructor for singleton pattern
 	 */
 	private ViewManager()
 	{
 		// Register views
 		allViews = new HashMap<ViewEnum, View>();
-		allViews.put(ViewEnum.LOGIN, new LoginView()); 
-		//allViews.put(ViewEnum.REGISTER, new RegisterView()); 
-		//allViews.put(ViewEnum.LOGIN, new SearchView());
+		allViews.put(ViewEnum.AUTH, new AuthView()); 
+		allViews.put(ViewEnum.HOME, new HomeView());
 		
 		History.addValueChangeHandler(this);
 	}
 	
-
-	/**
-	 * Sets up start page and initializes the history (if there isn't a
-	 * history).
-	 */
-	public void loadStartView()
-	{
-		RootPanel.get("body").add(new LoginView()); // Should be replace with static content
-		
-		// AT : TODO
-
-//		if (History.getToken().length() == 0)
-//		{
-//			History.newItem("HOME");
-//		}
-	}
-
 	/**
 	 * Gives the singleton instance 
-	 * @return The singleton instance
+	 * @return this instance of the view manager 
 	 */
 	public static ViewManager getInstance()
 	{
-		if (instance == null)
-		{
-			instance = new ViewManager();
-		}
-		return instance;
+		if (instance != null)
+			return instance;
+		return instance = new ViewManager();
+			
 	}
+	
+
+	/**
+	 * Sets up start page and initializes the history
+	 */
+	public void loadBaseView()
+	{
+		
+		RootPanel.get("body").add(new HomeView()); // Should be replace with static content
+		
+		// AT : TODO
+
+		if (History.getToken().length() == 0)
+		{
+			History.newItem("HOME");
+		}
+	}
+
 
 	/**
 	 * Sets the body of the website to a certain view
@@ -91,9 +91,7 @@ public class ViewManager implements ValueChangeHandler<String>
 
 	/**
 	 * Processes the hyperlink clicks
-	 * 
-	 * @param event
-	 *            The event of the hyperlink click
+	 * @param event The event of the hyperlink click
 	 */
 	@Override
 	public void onValueChange(ValueChangeEvent<String> event)

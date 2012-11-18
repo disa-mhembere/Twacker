@@ -1,62 +1,42 @@
 package edu.jhu.twacker.client.view;
 
-//import java.util.List;
-//import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-//import com.google.gwt.event.shared.HandlerRegistration;
-//import com.google.gwt.i18n.shared.DateTimeFormat;
-//import com.google.gwt.user.client.History;
-//import com.google.gwt.user.client.rpc.AsyncCallback;
-//import com.google.gwt.user.client.ui.Hyperlink;
-//import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Hyperlink;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import edu.jhu.twacker.model.TwackerModel;
 
-//import edu.jhu.twacker.client.manager.ViewManager;
 
+public class HomeView extends View {
 
-public class HomeView extends View implements ValueChangeHandler<String> {
-
-	private VerticalPanel masterPanel;
-//	private List<Search> searchTerms;
-//	
-//	private final static DateTimeFormat formatterNoTime = DateTimeFormat.getFormat("EEEE, MMMM d, yyyy");
-//	private final static DateTimeFormat formatterTime = DateTimeFormat.getFormat("EEEE, MMMM d, yyyy, h:mm aa");
-//	private HandlerRegistration handlerRegistration;
+	private VerticalPanel mainPanel;
+	private Hyperlink signInUp;
+//	private Hyperlink logOut;  // TODO : DM
+	private Label homeLabel;
+	
+//	private List<Search> searchTerms; // TODO : DM
 
 	/**
-	 * Defautl ctor
+	 * Default ctor
 	 */
 	public HomeView() {
 
-		masterPanel = new VerticalPanel();
-		initWidget(masterPanel);
+		mainPanel = new VerticalPanel();
+		homeLabel = new Label("HOMEPAGE"); // To be moved to a static constantly loaded page
+		signInUp = new Hyperlink("Sign-in / Sign-up", "AUTH"); // To be moved to a static constantly loaded page
+		//logOut = new Hyperlink("Log out", "LOGOUT"); // To be moved to a static constantly loaded page
 		
-		// Testing - not unsucccessfull but not quite successful
-		TwackerModel tm = new TwackerModel("Obama"); 
-		tm.run();
-		System.out.println(tm.getResult());
+		mainPanel.add(signInUp);
+		//mainPanel.add(logOut);
 		
-//		handlerRegistration = History.addValueChangeHandler(this);
+		mainPanel.add(homeLabel);
+		initWidget(mainPanel);
+		
+		// Testing - not unsuccessful but not quite successful
+//		TwackerModel tm = new TwackerModel("Obama"); 
+//		tm.run();
+//		System.out.println(tm.getResult());
+		
 	}
-
-	/**
-	 * Processes the Announcement hyperlink list clicked
-	 * @param event The event of the hyperlink click
-	 */
-	@Override
-	public void onValueChange(ValueChangeEvent<String> event) {
-//		int index;
-//		try {
-//			index = Integer.parseInt(event.getValue());
-//		} catch(NumberFormatException e) {
-//			return;
-//		}
-//		handlerRegistration.removeHandler();
-//		ViewManager.getInstance(); // TODO: DM  .generateAnnouncementPage(announcements.get(index));
-	}
-
 }
 

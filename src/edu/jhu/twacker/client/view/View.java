@@ -7,7 +7,7 @@ package edu.jhu.twacker.client.view;
 import com.google.gwt.user.client.ui.Composite;
 
 /**
- * @author dmhembere44
+ * @author Disa Mhembere
  * 
  */
 public class View extends Composite

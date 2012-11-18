@@ -6,7 +6,7 @@
 package edu.jhu.twacker.client;
 
 import com.google.gwt.core.client.EntryPoint;
-//import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.History;
 
 import edu.jhu.twacker.client.manager.ViewManager;
 
@@ -21,11 +21,12 @@ public class Twacker implements EntryPoint
 {
 
 	/**
-	 * This is the entry point method.
+	 * This is the entry point method for the application
+	 * When it loads this is run
 	 */
 	public void onModuleLoad()
 	{
-		ViewManager.getInstance().loadStartView();
-	    //History.fireCurrentHistoryState();
+		ViewManager.getInstance().loadBaseView();
+	    History.fireCurrentHistoryState(); // enables back, forward capabilities
 	}
 }

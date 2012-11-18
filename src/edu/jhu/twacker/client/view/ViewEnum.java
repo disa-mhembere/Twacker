@@ -5,11 +5,12 @@
 package edu.jhu.twacker.client.view;
 
 /**
+ * An Enum class containing a map to all views
  * @author Disa Mhembere
  *
  */
 public enum ViewEnum
 {
-	HOME, LOGIN, REGISTER, SEARCH  // AL / AT: TODO Add other views
+	HOME, AUTH, SEARCH  // AL / AT: TODO Add other views
 
 }
