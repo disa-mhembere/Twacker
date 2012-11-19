@@ -35,6 +35,10 @@ public class OtterRequest
 	 */
 	protected Parameters parameters;
 	
+	public OtterRequest()
+	{
+	}
+	
 	/**
 	 * The constructor for the class.
 	 * @param parameters The <code>Parameters</code> object that will hold

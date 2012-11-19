@@ -86,17 +86,7 @@ public class HistogramExec extends QueryExec
 	public static void main(String[] args)
 	{
 		HistogramExec histogram = new HistogramExec("Obama", "86400", "10");
-		Thread thread = new Thread(histogram);
-		
-		thread.start();
-		try
-		{
-			thread.join();
-		}
-		catch (Exception e)
-		{
-			// TODO nothing.
-		}
+		histogram.run();
 		
 		System.out.println(histogram);
 	}

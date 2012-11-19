@@ -68,17 +68,7 @@ public class ExpertsExec extends QueryExec
 	public static void main(String[] args)
 	{
 		ExpertsExec experts = new ExpertsExec("Obama");
-		Thread thread = new Thread(experts);
-		
-		thread.start();
-		try
-		{
-			thread.join();
-		}
-		catch (Exception e)
-		{
-			// nothing
-		}
+		experts.run();
 		
 		System.out.println(experts);
 	}

@@ -15,7 +15,10 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 
 /**
@@ -53,8 +56,9 @@ public class HttpGetWrapper
 	public HttpGetWrapper(String url)
 	{
 		this.url = url;
-		
-		this.client = new DefaultHttpClient();
+		HttpParams httpParams = new BasicHttpParams();
+		ClientConnectionManager connectionManager = new GAEConnectionManager();
+		this.client = new DefaultHttpClient(connectionManager, httpParams);
 		this.get = new HttpGet(this.url);
 	}
 	

@@ -16,6 +16,10 @@ public class ExpertsQuery implements OtterQuery
 	 */
 	private ExpertsResponse response;
 	
+	public ExpertsQuery()
+	{
+	}
+	
 	/**
 	 * The constructor for the class.
 	 * @param q The search term.

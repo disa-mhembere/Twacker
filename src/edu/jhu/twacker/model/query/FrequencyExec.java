@@ -93,17 +93,8 @@ public class FrequencyExec extends QueryExec
 	public static void main(String[] args)
 	{
 		FrequencyExec frequency = new FrequencyExec("Obama", 1000, 10000);
-		Thread thread = new Thread(frequency);
+		frequency.run();
 		
-		thread.start();
-		try
-		{
-			thread.join();
-		}
-		catch (InterruptedException e)
-		{
-			e.printStackTrace();
-		}
 		System.out.println(frequency);
 	}
 }

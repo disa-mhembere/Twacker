@@ -28,6 +28,10 @@ public class HistogramQuery implements OtterQuery
 	 */
 	private HistogramResponse response;
 	
+	public HistogramQuery()
+	{
+	}
+	
 	/**
 	 * The constructor for the class. 
 	 * @param q The required query string.

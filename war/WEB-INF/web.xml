@@ -11,6 +11,16 @@
     <url-pattern>/twacker/AuthService</url-pattern>
   </servlet-mapping>
   
+  <servlet>
+    <servlet-name>queryServlet</servlet-name>
+    <servlet-class>edu.jhu.twacker.server.QueryServiceImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>queryServlet</servlet-name>
+    <url-pattern>/twacker/query</url-pattern>
+  </servlet-mapping>
+  
   <!-- Default page to serve -->
   <welcome-file-list>
     <welcome-file>Twacker.html</welcome-file>

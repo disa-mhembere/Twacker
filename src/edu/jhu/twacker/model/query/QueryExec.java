@@ -12,13 +12,13 @@ package edu.jhu.twacker.model.query;
  * 
  * @author Daniel Deutsch
  */
-public abstract class QueryExec implements Runnable
+public abstract class QueryExec
 {
 //	/**
 //	 * Executes the query with the given String to search for.
 //	 * @param search The search string.
 //	 */
-//	public void execute(String search);
+	public abstract void run();
 	
 	public abstract String toString();
 }

@@ -207,17 +207,8 @@ public class SentimentExec extends QueryExec
 	public static void main(String[] args)
 	{
 		SentimentExec sentiment = new SentimentExec("Obama");
-		Thread thread = new Thread(sentiment);
+		sentiment.run();
 		
-		thread.start();
-		try
-		{
-			thread.join();
-		}
-		catch (Exception e)
-		{
-			// TODO nothing
-		}
 		System.out.println(sentiment);
 	}
 }

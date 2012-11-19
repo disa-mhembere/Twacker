@@ -20,7 +20,7 @@ import edu.jhu.twacker.model.query.SentimentExec;
  * 
  * @author Daniel Deutsch
  */
-public class TwackerModel implements Runnable
+public class TwackerModel
 {
 	/**
 	 * A list of all of the query executers that this class will have.
@@ -66,22 +66,7 @@ public class TwackerModel implements Runnable
 	{
 		for (QueryExec executer : this.executers)
 		{
-			Thread thread = new Thread(executer);
-			this.threads.add(thread);
-			thread.start();
-		}
-		
-		for (Thread thread : this.threads)
-		{
-			try
-			{
-				thread.join();
-			}
-			catch (InterruptedException e)
-			{
-				// TODO Do something about this?
-				e.printStackTrace();
-			}
+			executer.run();
 		}
 		
 		this.createJsonFormat();
@@ -125,17 +110,8 @@ public class TwackerModel implements Runnable
 	public static void main(String[] args)
 	{
 		TwackerModel model = new TwackerModel("Obama");
-		Thread thread = new Thread(model);
+		model.run();
 		
-		thread.start();
-		try
-		{
-			thread.join();
-		}
-		catch (Exception e)
-		{
-			// nothing
-		}
 		System.out.println(model.toString());
 	}
 }
