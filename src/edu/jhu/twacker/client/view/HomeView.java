@@ -13,19 +13,19 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-import edu.jhu.twacker.client.service.QueryService;
-import edu.jhu.twacker.client.service.QueryServiceAsync;
-import edu.jhu.twacker.model.TwackerModel;
+import edu.jhu.twacker.client.service.SearchService;
+import edu.jhu.twacker.client.service.SearchServiceAsync;
 
 
 public class HomeView extends View {
 
-	private final QueryServiceAsync queryService = GWT.create(QueryService.class);
+	private final SearchServiceAsync queryService = GWT.create(SearchService.class);
 	
 	private VerticalPanel mainPanel;
 	private Hyperlink signInUp;
 //	private Hyperlink logOut;  // TODO : DM
 	private Label homeLabel;
+	private Label saveStatusLabel;
 	
 	private TextBox searchBox = new TextBox();
 	private Button searchButton = new Button("Search");
@@ -40,8 +40,10 @@ public class HomeView extends View {
 
 		mainPanel = new VerticalPanel();
 		homeLabel = new Label("HOMEPAGE"); // To be moved to a static constantly loaded page
-		signInUp = new Hyperlink("Sign-in / Sign-up", "AUTH"); // To be moved to a static constantly loaded page
+		signInUp = new Hyperlink("Sign-in", "AUTH"); // To be moved to a static constantly loaded page
 		//logOut = new Hyperlink("Log out", "LOGOUT"); // To be moved to a static constantly loaded page
+		saveStatusLabel = new Label();
+		saveStatusLabel.setVisible(false);
 		
 		mainPanel.add(signInUp);
 		//mainPanel.add(logOut);		
@@ -50,6 +52,7 @@ public class HomeView extends View {
 		mainPanel.add(searchBox);
 		mainPanel.add(searchButton);
 		mainPanel.add(infoLabel);
+		mainPanel.add(saveStatusLabel);
 		
 		initWidget(mainPanel);
 		
@@ -62,6 +65,7 @@ public class HomeView extends View {
 			 * Fired when the user clicks on the sendButton.
 			 */
 			public void onClick(ClickEvent event) {
+				saveSearchTerm(searchBox.getText());
 				sendQueryToServer();
 			}
 	
@@ -70,6 +74,7 @@ public class HomeView extends View {
 			 */
 			public void onKeyUp(KeyUpEvent event) {
 				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+					saveSearchTerm(searchBox.getText());
 					sendQueryToServer();
 				}
 			}
@@ -92,17 +97,35 @@ public class HomeView extends View {
 						});
 			}
 		}
-		
+				
 		// Add a handler to send the name to the server
 		MyHandler handler = new MyHandler();
 		searchButton.addClickHandler(handler);
 		searchBox.addKeyUpHandler(handler);
 		
-		// Testing - not unsuccessful but not quite successful
-//		TwackerModel tm = new TwackerModel("Obama"); 
-//		tm.run();
-//		System.out.println(tm.getResult());
-		
 	}
+	
+	private void saveSearchTerm(final String searchTerm)
+	{
+		saveStatusLabel.setVisible(false);
+		queryService.saveSearch(searchTerm, new AsyncCallback<Void>()
+		{
+			@Override
+			public void onSuccess(Void result)
+			{
+				saveStatusLabel.setVisible(true);
+				saveStatusLabel.setText("Search term(s) saved!");
+			}
+			
+			@Override
+			public void onFailure(Throwable caught)
+			{
+				saveStatusLabel.setVisible(true);
+				saveStatusLabel.setText("Search term(s) unsucessful! " + caught.getMessage());	
+			}
+		});
+	}
+	
+	
 }
 

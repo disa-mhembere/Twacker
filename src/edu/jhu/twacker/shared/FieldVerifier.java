@@ -21,7 +21,7 @@ public class FieldVerifier
 	 * @param name the name of user
 	 * @return true if valid else false
 	 */
-	public static boolean isValidUserName(String name)
+	public static boolean isValidEmail(String name)
 	{
 		
 		Pattern p = Pattern.compile("[^a-zA-z0-9]");

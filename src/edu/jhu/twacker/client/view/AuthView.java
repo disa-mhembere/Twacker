@@ -6,41 +6,47 @@ package edu.jhu.twacker.client.view;
 
 // Visual features
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Anchor;
 
 // Event handling
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 
-import edu.jhu.twacker.client.manager.AuthManager;
-import edu.jhu.twacker.client.manager.AuthManagerCallback;
-import edu.jhu.twacker.shared.Session;
+// Authentication
+import com.google.gwt.core.client.GWT;
+
+import edu.jhu.twacker.client.data.AuthInfo;
+import edu.jhu.twacker.client.service.AuthService;
+import edu.jhu.twacker.client.service.AuthServiceAsync;
 
 /**
- * View for user sign-in & sign-up
- * If a user chooses to not sign-up/sign-in the default
- * username & passphrase are applied
+ * View for user sign-in & sign-up If a user chooses to not sign-up/sign-in the
+ * default username & password are applied
  * 
  * @author Disa Mhembere
  */
 public class AuthView extends View
 {
 
-	private HorizontalPanel mainPanel = new HorizontalPanel();
+	private AuthInfo authInfo = null;
+	private final AuthServiceAsync authService = GWT.create(AuthService.class);
+	private Anchor gmailSignUpAnchor = new Anchor("Gmail Sign-up", true,
+			"https://accounts.google.com/SignUp?service=mail&continue=https%3A%2F%2"
+					+ "Fmail.google.com%2Fmail%2F&ltmpl=default", "_blank"); // Link
+																								// to
+																								// gmail
+																								// sign-up
 
-	// Sign-up
-	private VerticalPanel signUpPanel = new VerticalPanel();
-	private TextBox signUpUsernameTextBox = new TextBox();
-	private PasswordTextBox signUpPasswordTextBox = new PasswordTextBox();
-	private PasswordTextBox confirmSignUpPasswordTextBox = new PasswordTextBox();
-	private Button signUpButton = new Button("Sign-up");
-	private Label signUpinfoLabel = new Label();
+	// Sign-in
 
 	private VerticalPanel signInPanel = new VerticalPanel();
 	private TextBox usernameTextBox = new TextBox();
@@ -50,18 +56,18 @@ public class AuthView extends View
 	private Label signInInfoLabel = new Label();
 
 	/**
-	 * Default constructor loads up sign-in & sign-up view
-	 * forms
+	 * Default constructor loads up sign-in & sign-up view forms
 	 */
 	public AuthView()
 	{
 
+		onSignedIn();
 		usernameTextBox.setText("e.g gangnam");
 		signInInfoLabel.setVisible(false);
 
 		// Assemble sign-in panel
 		signInPanel.add(new Label("Twacker Sign-in"));
-		signInPanel.add(new Label("Twacker Username"));
+		signInPanel.add(new Label("Gmail address"));
 		signInPanel.add(usernameTextBox);
 		signInPanel.add(new Label("Twacker Password"));
 		signInPanel.add(signInPasswordBox);
@@ -70,24 +76,10 @@ public class AuthView extends View
 		buttonPanel.setWidget(0, 0, signInButton);
 		buttonPanel.setWidget(0, 1, continueNoSignInButton);
 		signInPanel.add(buttonPanel);
+		signInPanel.add(gmailSignUpAnchor);
 		signInPanel.add(signInInfoLabel);
 
-		mainPanel.add(signInPanel);
-
-		// Assemble Sign-up panel
-		signUpPanel.add(new Label("Twacker Sign-up"));
-		signUpPanel.add(new Label("New Username"));
-		signUpPanel.add(signUpUsernameTextBox);
-		signUpPanel.add(new Label("New Password"));
-		signUpPanel.add(signUpPasswordTextBox);
-		signUpPanel.add(new Label("Re-enter Password"));
-		signUpPanel.add(confirmSignUpPasswordTextBox);
-		signUpPanel.add(signUpButton);
-		signUpPanel.add(signUpinfoLabel);
-
-		mainPanel.add(signUpPanel);
-
-		// Listen for mouse events on the Add button.
+		// Listen for mouse events on the sign-in button.
 		signInButton.addClickHandler(new ClickHandler()
 		{
 			@Override
@@ -106,68 +98,75 @@ public class AuthView extends View
 			}
 		});
 
-		initWidget(mainPanel); // instantiate widget
+		initWidget(signInPanel); // instantiate widget
 
 	}
 
 	/**
-	 * Requests access to Twacker homepage
-	 * without passing a username and password
-	 * thus passes in the default values
+	 * Requests access to Twacker homepage without passing a username and
+	 * password thus passes in the default values
 	 */
 	public void requestNoLogin()
 	{
 		signInInfoLabel.setVisible(false);
-		AuthManager.getInstance().signIn("username", "password",
-				new AuthManagerCallback<Session>() // Generic user
-				{
-					@Override
-					public void onSuccess(Session result)
-					{
-						History.newItem("HOME");
-					}
-
-					// Cant get to this state
-					@Override
-					public void onFail()
-					{
-						signInInfoLabel.setVisible(true);
-						signInInfoLabel.setText("This should never happen!");
-					}
-				});
-
+		History.newItem("HOME"); // No login? Then redirect to homepage
 	}
 
 	/**
-	 * Requests access to Twacker homepage
-	 * via a login username and password
+	 * Requests access to Twacker homepage via a login username and password
 	 */
 	public void requestLogin()
 	{
 		signInInfoLabel.setVisible(false);
-		AuthManager.getInstance().signIn(usernameTextBox.getText(),
-				signInPasswordBox.getText(), new AuthManagerCallback<Session>()
-				{
-					@Override
-					public void onSuccess(Session result)
-					{
-						History.newItem("HOME");
-					}
+		
+		if (authInfo == null)
+			authInfo = new AuthInfo();
 
-					@Override
-					public void onFail()
+		authService.signIn(GWT.getHostPageBaseURL(),
+				new AsyncCallback<AuthInfo>()
+				{
+					public void onFailure(Throwable error)
 					{
 						signInInfoLabel.setVisible(true);
-						signInInfoLabel.setText("Login Failed!");
+						System.err.println("DM: Error on sign-in: " + error.getLocalizedMessage()); // TODO : DM
+						signInInfoLabel.setText("DM: Error on sign-in: " + error.getLocalizedMessage());
+					}
+
+					public void onSuccess(AuthInfo result)
+					{
+						authInfo = result;
+						if (authInfo.isLoggedIn())
+						{
+							signInInfoLabel.setVisible(true);
+							signInInfoLabel.setText("You are already signed-in");
+							History.newItem("HOME");
+						} else // User isn't logged in - then verify email & password & load up home
+						{
+							signInInfoLabel.setVisible(true);
+							
+							signInInfoLabel.setText("Login email: " + result.getEmailAddress() + 
+									"Login nickname " + result.getNickname());
+							
+							//History.newItem("AUTH");
+							//Window.Location.reload();
+						}
 					}
 				});
-	}
-	
-	
-	public void requestRegister()
-	{
-		// DM : TODO
-	}
-	
 
+	}
+	
+	/**
+	 * TODO : DM
+	 */
+	public void onSignedIn()
+	{
+		if (authInfo == null)
+			return;
+		
+		if (!authInfo.isLoggedIn())
+			return;
+		
+		if (authInfo.isLoggedIn())
+			History.newItem("HOME");	
+	}
 }
