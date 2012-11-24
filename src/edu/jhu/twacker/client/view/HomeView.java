@@ -24,7 +24,7 @@ public class HomeView extends View {
 	private VerticalPanel mainPanel;
 	private Hyperlink signInUp;
 //	private Hyperlink logOut;  // TODO : DM
-	private Label homeLabel;
+//	private Label homeLabel;
 	private Label saveStatusLabel;
 	
 	private TextBox searchBox = new TextBox();
@@ -39,7 +39,7 @@ public class HomeView extends View {
 	public HomeView() {
 
 		mainPanel = new VerticalPanel();
-		homeLabel = new Label("HOMEPAGE"); // To be moved to a static constantly loaded page
+//		homeLabel = new Label("HOMEPAGE"); // To be moved to a static constantly loaded page
 		signInUp = new Hyperlink("Sign-in", "AUTH"); // To be moved to a static constantly loaded page
 		//logOut = new Hyperlink("Log out", "LOGOUT"); // To be moved to a static constantly loaded page
 		saveStatusLabel = new Label();
@@ -47,7 +47,7 @@ public class HomeView extends View {
 		
 		mainPanel.add(signInUp);
 		//mainPanel.add(logOut);		
-		mainPanel.add(homeLabel);
+//		mainPanel.add(homeLabel);
 		
 		mainPanel.add(searchBox);
 		mainPanel.add(searchButton);

@@ -14,6 +14,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 
 import edu.jhu.twacker.client.view.HomeView;
 import edu.jhu.twacker.client.view.AuthView;
+import edu.jhu.twacker.client.view.PersonalHistoryView;
 import edu.jhu.twacker.client.view.View;
 import edu.jhu.twacker.client.view.ViewEnum;
 
@@ -58,8 +59,9 @@ public class ViewManager implements ValueChangeHandler<String>
 	 */
 	public void loadBaseView()
 	{
-		
-		RootPanel.get("body").add(new HomeView()); // Should be replace with static content
+		// Consistently loaded upon launch content
+		RootPanel.get("body").add(new HomeView()); 
+		RootPanel.get("history").add(new PersonalHistoryView()); 
 		
 		// AT : TODO
 

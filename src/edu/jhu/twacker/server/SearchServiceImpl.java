@@ -99,4 +99,11 @@ public class SearchServiceImpl extends RemoteServiceServlet implements
 	private PersistenceManager getPersistenceManager() {
 	    return PMF.getPersistenceManager();
 	  }
+
+	@Override
+	public List<String> getDaySearches()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

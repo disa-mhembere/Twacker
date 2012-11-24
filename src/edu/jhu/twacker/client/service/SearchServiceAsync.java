@@ -14,4 +14,6 @@ public interface SearchServiceAsync {
 	void saveSearch(String search, AsyncCallback<Void> callback);
 
 	void getAllSearches(AsyncCallback<List<String>> callback);
+
+	void getDaySearches(AsyncCallback<List<String>> asyncCallback);
 }
