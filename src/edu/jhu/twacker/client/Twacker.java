@@ -9,6 +9,7 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.History;
 
 import edu.jhu.twacker.client.manager.ViewManager;
+import com.allen_sauer.gwt.log.client.Log; /*FOR LOGGING*/
 
 /**
  * This class is used to redirect the page according to the view we want
@@ -28,5 +29,6 @@ public class Twacker implements EntryPoint
 	{
 		ViewManager.getInstance().loadBaseView();
 	    History.fireCurrentHistoryState(); // enables back, forward capabilities
+	    Log.debug("This is a 'DEBUG' test message"); /*FOR LOGGING*/
 	}
 }
