@@ -91,9 +91,9 @@ public class PersonalHistoryView extends View
 			{
 			   setSingleSearchDate(event.getValue());
 			   
-				Log.debug("Time is:"
-						+ new Time(getSingleSearchDate().getTime()).toString()
-						+ " Date is: " + dateFormat.format(getSingleSearchDate()));
+//				Log.debug("Time is:"
+//						+ new Time(getSingleSearchDate().getTime()).toString()
+//						+ " Date is: " + dateFormat.format(getSingleSearchDate()));
 			}
 		});
 		
@@ -121,9 +121,6 @@ public class PersonalHistoryView extends View
 				}
 				searchLabel.setText(dateFormat.format(getSingleSearchDate()) +
 						" Searches: " + s);
-				// Log.debug(historyService + "s value: " + s);
-				
-				
 			}
 		});
 		
@@ -151,8 +148,6 @@ public class PersonalHistoryView extends View
 				//Log.debug(historyService + "s value: " + s);
 			}	
 		});
-		
-		
 	}
 	
 	

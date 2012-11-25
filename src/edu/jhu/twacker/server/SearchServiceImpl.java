@@ -17,7 +17,6 @@ import edu.jhu.twacker.server.data.Search;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.datastore.Query.FilterOperator;
@@ -124,31 +123,28 @@ public class SearchServiceImpl extends RemoteServiceServlet implements
 	}
 	
 	@Override
+	/**
+	 * Get all searches for a specific day for a user
+	 * @param newParam the the date requested in search
+	 */
 	public Map<Date, String> getDaySearches(Date newParam)
 	{
+		Map<Date, String> daySearches = new HashMap<Date, String>();
 		Map<Date, String> result = new HashMap<Date, String>();
-
-		Filter isUser = new FilterPredicate("user", FilterOperator.EQUAL,
-				new User("guest", "gmail.com")); // DM: TODO Temporary
-		
-		
-		Filter isDate = new FilterPredicate("createDate", FilterOperator.EQUAL,
-				newParam);
-		
-		Filter isUserAndDate = CompositeFilterOperator.and(isUser, isDate);
-//		Query q = new Query("Search").setFilter(isUser).setFilter(Entity.KEY_RESERVED_PROPERTY,
-//				FilterOperator.EQUAL, lastSeenKey)  ;
-		Query q = new Query("Search").setFilter(isUser);
-		//Query q = new Query("Search").setFilter(isUserAndDate);
-		PreparedQuery pq = datastore.prepare(q);
-
+		daySearches = getAllSearches();
+		java.sql.Date queryDate = new java.sql.Date(newParam.getTime());
 		try
 		{
-			for (Entity retSearches : pq.asIterable())
+			for (Date utilDate : daySearches.keySet())
 			{
-				result.put((Date) retSearches.getProperty("createDate"),
-						(String) retSearches.getProperty("searchTerm"));
-			}
+				
+				java.sql.Date retDate = new java.sql.Date(utilDate.getTime());
+				
+				if (retDate.toString().equals(queryDate.toString()))
+				{
+					result.put(utilDate, daySearches.get(utilDate));
+				}
+		}
 		} catch (Exception e)
 		{
 			// DM OK to return empty hashMap
@@ -157,11 +153,19 @@ public class SearchServiceImpl extends RemoteServiceServlet implements
 		return result;
 	}
 	
+	/**
+	 * Gets the current user name/id
+	 * @return the current user
+	 */
 	private User getUser() {
 	    UserService userService = UserServiceFactory.getUserService();
 	    return userService.getCurrentUser();
 	  }
 	
+	/**
+	 * Get the persistence manager instance
+	 * @return the persistence manager instance
+	 */
 	private PersistenceManager getPersistenceManager() {
 	    return PMF.getPersistenceManager();
 	  }
