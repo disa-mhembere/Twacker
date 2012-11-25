@@ -1,6 +1,7 @@
 package edu.jhu.twacker.client.service;
 
-import java.util.List;
+import java.util.Date;
+import java.util.Map;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
@@ -23,11 +24,12 @@ public interface SearchService extends RemoteService {
 	 * @return a list of strings corresponding to all searches
 	 * the user has ever submitted
 	 */
-	public List<String> getAllSearches();
+	public Map<Date, String> getAllSearches();
 	
 	/**
 	 * Query datastore for a list of all searches of the day 
+	 * @param newParam TODO
 	 * @return a list of string containing all searches of a chosen day
 	 */
-	List<String> getDaySearches(); 
+	public Map<Date, String> getDaySearches(Date newParam);
 }
