@@ -4,11 +4,7 @@
  */
 package edu.jhu.twacker.client.view;
 
-import java.sql.Time;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -110,17 +106,7 @@ public class PersonalHistoryView extends View
 			 */
 			public void onClick(ClickEvent event)
 			{
-				
-				Collection<String> daySearchHist = new ArrayList<String>();
-				daySearchHist = getDayHistory().values();
-				
-				String s = "";
-				for (String st : daySearchHist)
-				{
-					s += st + ", ";  
-				}
-				searchLabel.setText(dateFormat.format(getSingleSearchDate()) +
-						" Searches: " + s);
+				getDayHistory();	
 			}
 		});
 		
@@ -136,16 +122,9 @@ public class PersonalHistoryView extends View
 			 */
 			public void onClick(ClickEvent event)
 			{
-				Collection<String> searchHist = new ArrayList<String>();
-				searchHist = getAllHistory().values();
 				
-				String s = "";
-				for (String st : searchHist)
-				{
-					s += st + ", ";  
-				}
-				searchLabel.setText("All Searches:" + s);
-				//Log.debug(historyService + "s value: " + s);
+				getAllHistory(); 
+				
 			}	
 		});
 	}
@@ -161,8 +140,14 @@ public class PersonalHistoryView extends View
 			
 			@Override
 			public void onSuccess(Map<Date, String> result)
-			{
-				singleDaySearchesMap = result;
+			{	
+				String s = "";
+				for (String st : result.values())
+				{
+					s += st + ", ";  
+				}
+				searchLabel.setText(dateFormat.format(getSingleSearchDate()) +
+						" Searches: " + s);	
 			}
 			
 			@Override
@@ -185,7 +170,13 @@ public class PersonalHistoryView extends View
 					@Override
 					public void onSuccess(Map<Date,String> result)
 					{
-						allSearchesMap = result;
+						String s = "";
+						for (String st : result.values())
+						{
+							s += st + ", ";  
+						}
+						searchLabel.setText("All Searches:" + s);
+						//Log.debug(historyService + "s value: " + s);
 					}
 					
 					@Override
