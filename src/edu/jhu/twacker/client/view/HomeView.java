@@ -12,6 +12,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.visualization.client.AbstractDataTable;
@@ -33,6 +34,9 @@ public class HomeView extends View {
 	private final SearchServiceAsync queryService = GWT.create(SearchService.class);
 
 	private VerticalPanel mainPanel;
+	private VerticalPanel histogramPanel = new VerticalPanel();
+	private VerticalPanel sentimentPanel = new VerticalPanel();
+	private TabPanel resultsTab = new TabPanel();
 	private Hyperlink signInUp;
 	//	private Hyperlink logOut;  // TODO : DM
 	//	private Label homeLabel;
@@ -108,9 +112,10 @@ public class HomeView extends View {
 					public void onSuccess(String result) {
 						infoLabel.setText("");						
 
+//						TODO FIX THIS
 						if (pie != null && line != null) {
-							mainPanel.remove(line);
-							mainPanel.remove(pie);
+							histogramPanel.remove(line);
+							sentimentPanel.remove(pie);
 						}
 						// Create a pie chart visualization.
 						line = new LineChart(createLineGraphs(result), createOptions());
@@ -119,8 +124,12 @@ public class HomeView extends View {
 						// Create a pie chart visualization.
 						pie = new PieChart(createPieChart(result), createOptions());
 						pie.addSelectHandler(createSelectHandler(pie));
-						mainPanel.add(line);
-						mainPanel.add(pie);
+						histogramPanel.add(line);
+						sentimentPanel.add(pie);
+						resultsTab.add(histogramPanel, "Histogram");
+						resultsTab.add(sentimentPanel, "Sentiment");
+						//resultsTab.selectTab(0);
+						mainPanel.add(resultsTab);
 					}
 				});
 			}
