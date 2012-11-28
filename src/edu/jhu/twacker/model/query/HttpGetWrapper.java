@@ -60,6 +60,12 @@ public class HttpGetWrapper
 		ClientConnectionManager connectionManager = new GAEConnectionManager();
 		this.client = new DefaultHttpClient(connectionManager, httpParams);
 		this.get = new HttpGet(this.url);
+		
+		// uncomment this section if you are running this locally
+//		this.url = url;
+//		
+//		this.client = new DefaultHttpClient();
+//		this.get = new HttpGet(this.url);
 	}
 	
 	/**

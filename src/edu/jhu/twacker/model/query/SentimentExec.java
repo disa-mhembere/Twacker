@@ -148,6 +148,7 @@ public class SentimentExec extends QueryExec
 	 */
 	private int getSentiment(String text)
 	{	
+		System.out.println(text);
 		AlchemyResponse response = alchemyAnalysis(text);
 		
 		if (response.getStatus().equals("ERROR"))
@@ -178,7 +179,7 @@ public class SentimentExec extends QueryExec
 		{
 			String encoded = URLEncoder.encode(tweet, "UTF-8");
 
-			HttpGetWrapper get = new HttpGetWrapper("http://access.alchemyapi.com/calls/text/TextGetTextSentiment?apikey=c1645e1d48ab13f41e79322143d483e8c9f0f558&text=" +
+			HttpGetWrapper get = new HttpGetWrapper("http://access.alchemyapi.com/calls/text/TextGetTextSentiment?apikey=fd4235d2b727b25906b6427509178a9c86911876&text=" +
 					encoded + "&outputMode=json");
 			
 			Gson gson = new Gson();
