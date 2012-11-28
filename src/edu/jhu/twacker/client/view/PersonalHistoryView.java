@@ -45,7 +45,7 @@ public class PersonalHistoryView extends View
 	//data objects
 	private Map<Date, String> allSearchesMap = new HashMap<Date, String>();
 	private Map<Date, String> singleDaySearchesMap = new HashMap<Date, String>();
-	private Date singleSearchDate;
+	private Date singleSearchDate = new Date(System.currentTimeMillis());
 	private Label searchLabel = new Label("");
 	
 	private DateTimeFormat dateFormat = DateTimeFormat.getFormat("EEEE, MMMM d, yyyy");
@@ -122,9 +122,7 @@ public class PersonalHistoryView extends View
 			 */
 			public void onClick(ClickEvent event)
 			{
-				
-				getAllHistory(); 
-				
+				getAllHistory(); 	
 			}	
 		});
 	}
@@ -137,7 +135,6 @@ public class PersonalHistoryView extends View
 	{
 		historyService.getDaySearches(getSingleSearchDate(), new AsyncCallback<Map<Date,String>>()
 		{
-			
 			@Override
 			public void onSuccess(Map<Date, String> result)
 			{	
@@ -146,14 +143,21 @@ public class PersonalHistoryView extends View
 				{
 					s += st + ", ";  
 				}
-				searchLabel.setText(dateFormat.format(getSingleSearchDate()) +
-						" Searches: " + s);	
+				
+				if (s=="")
+				{
+					s = "No searches for current day";
+				}
+				
+					searchLabel.setText(dateFormat.format(getSingleSearchDate()) +
+						" Searches: " + s);		
 			}
 			
 			@Override
 			public void onFailure(Throwable caught)
-			{
-				Log.debug("DM getDaySearches onFailure: " + caught.getMessage());
+			{	
+//				searchLabel.setText("Please select a date!");
+				Log.debug("DM getDaySearches onFailure: " + caught.getLocalizedMessage());
 			}
 		});
 		return singleDaySearchesMap;
@@ -175,6 +179,11 @@ public class PersonalHistoryView extends View
 						{
 							s += st + ", ";  
 						}
+						
+						if (s=="")
+						{
+							s = "No History!";
+						}
 						searchLabel.setText("All Searches:" + s);
 						//Log.debug(historyService + "s value: " + s);
 					}
@@ -183,7 +192,6 @@ public class PersonalHistoryView extends View
 					public void onFailure(Throwable caught)
 					{
 						Log.debug("DM getAllSearches onFailure: " + caught.getMessage()); // Debug mode
-						
 					}
 				});
 		
