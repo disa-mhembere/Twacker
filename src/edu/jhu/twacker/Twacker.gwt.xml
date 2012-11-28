@@ -22,6 +22,7 @@
   <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
 
   <!-- Other module inherits                                      -->
+  <inherits name='com.google.gwt.visualization.Visualization'/>  
 
   <!-- Specify the app entry point class.                         -->
   <entry-point class='edu.jhu.twacker.client.Twacker'/>

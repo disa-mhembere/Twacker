@@ -7,6 +7,8 @@ package edu.jhu.twacker.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.History;
+import com.google.gwt.visualization.client.VisualizationUtils;
+import com.google.gwt.visualization.client.visualizations.corechart.CoreChart;
 
 import edu.jhu.twacker.client.manager.ViewManager;
 //import com.allen_sauer.gwt.log.client.Log; /*FOR LOGGING*/
@@ -27,8 +29,13 @@ public class Twacker implements EntryPoint
 	 */
 	public void onModuleLoad()
 	{
-		ViewManager.getInstance().loadBaseView();
-	    History.fireCurrentHistoryState(); // enables back, forward capabilities
-//	    Log.debug("This is a 'DEBUG' test message"); /*FOR LOGGING*/
+		Runnable onLoadCallback = new Runnable() {
+			@Override
+			public void run() {
+				ViewManager.getInstance().loadBaseView();
+			    History.fireCurrentHistoryState();
+			}
+		};
+	    VisualizationUtils.loadVisualizationApi(onLoadCallback, CoreChart.PACKAGE);  
 	}
 }
