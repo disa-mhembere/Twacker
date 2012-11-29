@@ -11,6 +11,7 @@ import java.util.List;
 
 import com.google.gson.Gson;
 
+import edu.jhu.twacker.model.query.alchemy.AlchemyReponseWrapper;
 import edu.jhu.twacker.model.query.alchemy.AlchemyResponse;
 import edu.jhu.twacker.model.query.twitter.SearchTerm;
 import edu.jhu.twacker.model.query.twitter.tweet.Tweet;
@@ -31,13 +32,7 @@ import edu.jhu.twacker.model.query.twitter.tweet.Tweet;
  * @author Daniel Deutsch
  */
 public class SentimentExec extends QueryExec
-{
-	/**
-	 * The time that the query will get Tweets from the Streamer before
-	 * it analyzes them for content.
-	 */
-//	private static final long TIME = 10000;
-		
+{	
 	/**
 	 * The term to search for.
 	 */
@@ -68,6 +63,11 @@ public class SentimentExec extends QueryExec
 	 */
 	private int errors;
 	
+	/**
+	 * The class that contains the result data.
+	 */
+	private AlchemyReponseWrapper response;
+	
 	public SentimentExec(String search)
 	{
 		this.search = search;
@@ -79,6 +79,16 @@ public class SentimentExec extends QueryExec
 	public void run()
 	{
 		analyzeTweets(getTweets());
+		this.response = new AlchemyReponseWrapper(this.positive, this.negative, this.neutral, this.errors);
+	}
+	
+	/**
+	 * Retrieves the results of the query.
+	 * @return The results object.
+	 */
+	public AlchemyReponseWrapper getResults()
+	{
+		return this.response;
 	}
 	
 	/**
@@ -148,7 +158,6 @@ public class SentimentExec extends QueryExec
 	 */
 	private int getSentiment(String text)
 	{	
-		System.out.println(text);
 		AlchemyResponse response = alchemyAnalysis(text);
 		
 		if (response.getStatus().equals("ERROR"))
@@ -190,7 +199,7 @@ public class SentimentExec extends QueryExec
 			
 		}
 		return null;
-	}
+	} 
 
 	/**
 	 * Creates a JSON representation of the results from this query.

@@ -30,6 +30,7 @@ public class HistogramQuery implements OtterQuery
 	
 	public HistogramQuery()
 	{
+		
 	}
 	
 	/**

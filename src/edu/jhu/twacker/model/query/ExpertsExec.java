@@ -28,6 +28,11 @@ public class ExpertsExec extends QueryExec
 	private List<Expert> experts = new ArrayList<Expert>();
 	
 	/**
+	 * The results object.
+	 */
+	private ExpertsResponse results;
+	
+	/**
 	 * The constructor for the class.
 	 * @param term The term to search for.
 	 */
@@ -48,6 +53,16 @@ public class ExpertsExec extends QueryExec
 		
 		ExpertsQuery response = gson.fromJson(wrapper.get(), ExpertsQuery.class);
 		this.experts = ((ExpertsResponse) response.getResponse()).getList();
+		this.results = ((ExpertsResponse) response.getResponse());
+	}
+	
+	/**
+	 * Retrieves the results of the query.
+	 * @return The response object.
+	 */
+	public ExpertsResponse getResults()
+	{
+		return this.results;
 	}
 
 	/**

@@ -29,10 +29,11 @@ public class TwackerModel
 	 */
 	private List<QueryExec> executers = new ArrayList<QueryExec>();
 	
-	/**
-	 * The Thread objects that will run the executers.
-	 */
-	private List<Thread> threads = new ArrayList<Thread>();
+	private HistogramExec histogram;
+	
+	private SentimentExec sentiment;
+	
+	private ExpertsExec experts;
 	
 	/**
 	 * The term to search for.
@@ -44,7 +45,9 @@ public class TwackerModel
 	 * Javascript part of the application which will display the data.
 	 * This data member should be retrieved after the thread has been run.
 	 */
-	private String result;
+	private String jsonResult;
+	
+	private Result result;
 	
 	/**
 	 * The constructor for the class.
@@ -53,9 +56,13 @@ public class TwackerModel
 	{
 		this.search = search;
 		
-		this.executers.add(new HistogramExec(this.search, "86400", "10"));
-		this.executers.add(new SentimentExec(this.search));
-		this.executers.add(new ExpertsExec(this.search));
+		this.histogram = new HistogramExec(this.search, "86400", "10");
+		this.sentiment = new SentimentExec(this.search);
+		this.experts = new ExpertsExec(this.search);
+		
+		this.executers.add(this.histogram);
+		this.executers.add(this.sentiment);
+		this.executers.add(this.experts);
 	}
 	
 	/**
@@ -65,11 +72,10 @@ public class TwackerModel
 	public void run()
 	{
 		for (QueryExec executer : this.executers)
-		{
 			executer.run();
-		}
 		
 		this.createJsonFormat();
+		this.result = new Result(this.histogram.getResults(), this.experts.getResults(), this.sentiment.getResults());
 	}
 	
 	/**
@@ -77,20 +83,20 @@ public class TwackerModel
 	 */
 	public void createJsonFormat()
 	{
-		this.result = "{ \"search\" : \"" + this.search + "\", ";
+		this.jsonResult = "{ \"search\" : \"" + this.search + "\", ";
 		for (QueryExec executer : this.executers)
-			this.result += executer + ", ";
+			this.jsonResult += executer + ", ";
 		
-		int index = this.result.lastIndexOf(',');
-		this.result = this.result.substring(0, index);
-		this.result += " }";
+		int index = this.jsonResult.lastIndexOf(',');
+		this.jsonResult = this.jsonResult.substring(0, index);
+		this.jsonResult += " }";
 	}
 	
 	/**
-	 * Gets the JSON representation of the result of these queries.
-	 * @return The String representation.
+	 * Retrieves the results of all of the queries.
+	 * @return The result.
 	 */
-	public String getResult()
+	public Result getResult()
 	{
 		return this.result;
 	}
@@ -99,9 +105,18 @@ public class TwackerModel
 	 * Gets the JSON representation of the result of these queries.
 	 * @return The String representation.
 	 */
+	public String getJsonResult()
+	{
+		return this.jsonResult;
+	}
+	
+	/**
+	 * Gets the JSON representation of the result of these queries.
+	 * @return The String representation.
+	 */
 	public String toString()
 	{
-		return this.getResult();
+		return this.getJsonResult();
 	}
 	
 	/**

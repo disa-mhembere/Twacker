@@ -7,6 +7,7 @@ package edu.jhu.twacker.model.query;
 import com.google.gson.Gson;
 import edu.jhu.twacker.model.query.otter.*;
 import edu.jhu.twacker.model.query.otter.histogram.HistogramQuery;
+import edu.jhu.twacker.model.query.otter.histogram.HistogramResponse;
 
 /**
  * This class performs the queries necessary to obtain the data
@@ -38,6 +39,11 @@ public class HistogramExec extends QueryExec
 	private String results;
 	
 	/**
+	 * Contains the results of the query.
+	 */
+	private HistogramResponse response;
+	
+	/**
 	 * The constructor for the class.
 	 * @param search The term to search for.
 	 * @param slice The seconds per slice.
@@ -64,11 +70,21 @@ public class HistogramExec extends QueryExec
 		{
 			OtterQuery response = gson.fromJson(wrapper.get(), HistogramQuery.class);
 			this.results = response.getResponse().toString();
+			this.response = (HistogramResponse) response.getResponse();
 		}
 		catch (Exception e)
 		{
 			System.out.println(e);
 		}
+	}
+	
+	/**
+	 * Retrieves the results of the query.
+	 * @return The results object.
+	 */
+	public HistogramResponse getResults()
+	{
+		return this.response;
 	}
 	
 	/**
