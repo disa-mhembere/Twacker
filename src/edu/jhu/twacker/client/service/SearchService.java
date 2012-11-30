@@ -13,6 +13,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 /**
  * The client side stub for the RPC service.
+ * @author Disa Mhembere, Alex Long
  */
 @RemoteServiceRelativePath("search")
 public interface SearchService extends RemoteService {
@@ -33,8 +34,8 @@ public interface SearchService extends RemoteService {
 	
 	/**
 	 * Query datastore for a list of all searches of the day 
-	 * @param newParam TODO
+	 * @param date the date requested
 	 * @return a list of string containing all searches of a chosen day
 	 */
-	public Map<Date, String> getDaySearches(Date newParam);
+	public Map<Date, String> getDaySearches(Date date);
 }

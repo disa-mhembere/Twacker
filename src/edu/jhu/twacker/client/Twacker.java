@@ -11,7 +11,7 @@ import com.google.gwt.visualization.client.VisualizationUtils;
 import com.google.gwt.visualization.client.visualizations.corechart.CoreChart;
 
 import edu.jhu.twacker.client.manager.ViewManager;
-//import com.allen_sauer.gwt.log.client.Log; /*FOR LOGGING*/
+
 
 /**
  * This class is used to redirect the page according to the view we want

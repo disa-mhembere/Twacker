@@ -34,6 +34,10 @@ public class RegisterServiceImpl extends RemoteServiceServlet implements Registe
 	      JDOHelper.getPersistenceManagerFactory("transactions-optional");
 	
 	@Override
+	/**
+	 * 
+	 * @see edu.jhu.twacker.client.service.RegisterService#registerUser(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+	 */
 	public void registerUser(String firstName, String lastName, String username,
 			String password, String email) throws userExistsException
 	{

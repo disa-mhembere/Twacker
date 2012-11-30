@@ -27,6 +27,7 @@ import edu.jhu.twacker.client.service.RegisterServiceAsync;
 import edu.jhu.twacker.shared.FieldVerifier;
 
 /**
+ * Class to allow users to register for the Twacker website
  * @author Disa Mhembere
  * 
  */
@@ -136,7 +137,7 @@ public class RegisterView extends View
 		{
 			registerService.registerUser(firstName, lastName, username, pwd, email, new AsyncCallback<Void>()
 			{
-				
+				 
 				@Override
 				public void onSuccess(Void result)
 				{

@@ -1,11 +1,13 @@
 /**
  * OOSE Project - Group 4
- * Search.java
+ * {@link Search}.java
  */
 package edu.jhu.twacker.server.data;
 
 /**
  * Persistent data class to hold a searchTerm submitted
+ * This class is not Javadoc'd because it is out of date & will be 
+ * edited momentarily
  * @author Disa Mhembere
  *
  */

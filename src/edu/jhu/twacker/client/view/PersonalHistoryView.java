@@ -1,6 +1,6 @@
 /**
  * OOSE Project - Group 4
- * PersonalHistoryView.java 
+ * {@link PersonalHistoryView}.java 
  */
 package edu.jhu.twacker.client.view;
 
@@ -27,8 +27,7 @@ import edu.jhu.twacker.client.service.SearchServiceAsync;
 import com.allen_sauer.gwt.log.client.Log;
 
 /**
- * This views purpose is to allow users to query their past search history
- * 
+ * This view's purpose is to allow users to query their past search history
  * @author Disa Mhembere
  */
 public class PersonalHistoryView extends View
@@ -88,10 +87,6 @@ public class PersonalHistoryView extends View
 			public void onValueChange(ValueChangeEvent<Date> event)
 			{
 				setSingleSearchDate(event.getValue());
-
-				// Log.debug("Time is:"
-				// + new Time(getSingleSearchDate().getTime()).toString()
-				// + " Date is: " + dateFormat.format(getSingleSearchDate()));
 			}
 		});
 
@@ -203,6 +198,7 @@ public class PersonalHistoryView extends View
 	}
 
 	/**
+	 * Get single days history for a user 
 	 * @return the singleSearchDate
 	 */
 	public Date getSingleSearchDate()
@@ -211,8 +207,7 @@ public class PersonalHistoryView extends View
 	}
 
 	/**
-	 * @param singleSearchDate
-	 *           the singleSearchDate to set
+	 * @param singleSearchDate the singleSearchDate to set
 	 */
 	public void setSingleSearchDate(Date singleSearchDate)
 	{

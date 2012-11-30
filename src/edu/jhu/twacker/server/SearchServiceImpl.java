@@ -1,3 +1,7 @@
+/**
+ * OOSE Project - Group 4
+ * {@link SearchServiceImpl}.java
+ */
 package edu.jhu.twacker.server;
 
 import java.util.Date;
@@ -30,7 +34,8 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 
 /**
- * The server side implementation of the RPC service.
+ * The server side implementation of the RPC SearchService
+ * @author Alex Long, Disa Mhembere
  */
 @SuppressWarnings("serial")
 public class SearchServiceImpl extends RemoteServiceServlet implements
@@ -43,7 +48,10 @@ public class SearchServiceImpl extends RemoteServiceServlet implements
 	// Get the Datastore Service
 	private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 	
-	
+	/**
+	 * 
+	 * @see edu.jhu.twacker.client.service.SearchService#queryServer(java.lang.String)
+	 */ 
 	public String queryServer(String input) throws IllegalArgumentException {
 		
 		model = new TwackerModel(input);
@@ -52,6 +60,10 @@ public class SearchServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
+	/**
+	 * 
+	 * @see edu.jhu.twacker.client.service.SearchService#saveSearch(java.lang.String)
+	 */
 	public void saveSearch(String search)
 	{
 		PersistenceManager pm = getPersistenceManager();
@@ -64,6 +76,10 @@ public class SearchServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
+	/**
+	 * 
+	 * @see edu.jhu.twacker.client.service.SearchService#getAllSearches(java.util.Map<java.util.Date, java.lang.String>)
+	 */
 	public Map<Date, String> getAllSearches()
 	{
 //		PersistenceManager pm = getPersistenceManager();
@@ -124,8 +140,8 @@ public class SearchServiceImpl extends RemoteServiceServlet implements
 	
 	@Override
 	/**
-	 * Get all searches for a specific day for a user
-	 * @param newParam the the date requested in search
+	 * 
+	 * @see edu.jhu.twacker.client.service.SearchService#getDaySearches(java.util.Map<java.util.Date, java.lang.String>)
 	 */
 	public Map<Date, String> getDaySearches(Date newParam)
 	{

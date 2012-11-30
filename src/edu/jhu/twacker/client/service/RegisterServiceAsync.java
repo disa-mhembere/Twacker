@@ -7,6 +7,7 @@
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
+ * Asynchronous counterpart to the {@link RegisterService} class
  * @author Disa Mhembere
  *
  */

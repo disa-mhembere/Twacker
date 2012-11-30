@@ -1,6 +1,6 @@
 /**
  * OOSE Project - Group 4
- * ViewEnum.java
+ * {@link ViewEnum}.java
  */
 package edu.jhu.twacker.client.view;
 

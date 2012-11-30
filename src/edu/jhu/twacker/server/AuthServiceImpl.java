@@ -38,7 +38,8 @@ public class AuthServiceImpl extends RemoteServiceServlet implements
 		
 		if (httpSession.getAttribute("username") == null)
 		{
-			return "guest"; // Default user when a user decides to not log in
+			setUsername("guest");
+			return getUserName(); // Default user when a user decides to not log in
 		}	
 		return httpSession.getAttribute("username").toString();
 	}
@@ -98,9 +99,8 @@ public class AuthServiceImpl extends RemoteServiceServlet implements
 	}
 
 	/**
-	 * Associate a user with the current httpSession
-	 * thus persisting user session data
-	 * @param username the new username created  
+	 * 
+	 * @see edu.jhu.twacker.client.service.AuthService#setUsername(String)
 	 */
 	@Override
 	public void setUsername(String username)

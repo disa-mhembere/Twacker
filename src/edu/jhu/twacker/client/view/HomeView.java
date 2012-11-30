@@ -1,3 +1,7 @@
+/** 
+ * OOSE Project - Group 4
+ * {@link HomeView}.java
+ */
 package edu.jhu.twacker.client.view;
 
 import com.google.gwt.core.client.GWT;
@@ -28,7 +32,11 @@ import com.google.gwt.visualization.client.visualizations.corechart.PieChart;
 import edu.jhu.twacker.client.service.SearchService;
 import edu.jhu.twacker.client.service.SearchServiceAsync;
 
-
+/**
+ * The Home view
+ * @author Disa Mhembere, Alex Long, Andy Tien
+ *
+ */
 public class HomeView extends View {
 
 	private final SearchServiceAsync queryService = GWT.create(SearchService.class);
@@ -52,7 +60,7 @@ public class HomeView extends View {
 	//	private List<Search> searchTerms; // TODO : DM
 
 	/**
-	 * Default ctor
+	 * Default constructor assembles the visual portions of the view
 	 */
 	public HomeView() {
 
@@ -142,6 +150,10 @@ public class HomeView extends View {
 
 	}
 
+	/**
+	 * Save search Terms(s) provided to users profile for {@link PersonalHistoryView}
+	 * @param searchTerm
+	 */
 	private void saveSearchTerm(final String searchTerm)
 	{
 		saveStatusLabel.setVisible(false);

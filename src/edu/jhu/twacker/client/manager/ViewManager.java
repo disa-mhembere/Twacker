@@ -1,6 +1,6 @@
 /**
  * OOSE Project - Group 4
- * ViewManager.java
+ * {@link ViewManager}.java
  */
 
 package edu.jhu.twacker.client.manager;
@@ -20,27 +20,40 @@ import edu.jhu.twacker.client.view.View;
 import edu.jhu.twacker.client.view.ViewEnum;
 
 /**
+ * This class manages the changing the of views.
+ * It determines the view requested and correct
+ * url to delegate
  * @author Disa Mhembere
  * 
  */
 public class ViewManager implements ValueChangeHandler<String>
 {
 	private static ViewManager instance;
-	private static HashMap <ViewEnum, View> allViews; // Map of all views & corresponding Enums
+	private static HashMap <ViewEnum, View> allViews = new HashMap<ViewEnum, View>(); // Map of all views & corresponding Enums
 	
 	/**
-	 * 
 	 * Private constructor for singleton pattern
+	 * Register all views here which add each view to the
+	 *  <code>allViews</code> hashMap
 	 */
 	private ViewManager()
 	{
 		// Register views
-		allViews = new HashMap<ViewEnum, View>();
-		allViews.put(ViewEnum.AUTH, new AuthView()); 
-		allViews.put(ViewEnum.HOME, new HomeView());
-		allViews.put(ViewEnum.REGISTER, new RegisterView());
-		
+		registerView(ViewEnum.AUTH, new AuthView());
+		registerView(ViewEnum.HOME, new HomeView());
+		registerView(ViewEnum.REGISTER, new RegisterView());
 		History.addValueChangeHandler(this);
+	}
+	
+	
+	/**
+	 * Register a view with the manager i.e add it to the <code>allViews</code> hashMap 
+	 * @param vE the enum corresponding to the view <code>v</code>
+	 * @param v the view 
+	 */
+	private void registerView(ViewEnum vE, View v )
+	{
+		allViews.put(vE, v);
 	}
 	
 	/**

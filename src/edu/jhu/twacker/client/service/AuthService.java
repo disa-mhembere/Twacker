@@ -45,9 +45,11 @@ public interface AuthService extends RemoteService
 	 */
 	public String signOut();
 	
+	
 	/**
-	 * Set session variable for username to specified username
-	 * @param username
+	 * Associate a user with the current httpSession
+	 * thus persisting user session data
+	 * @param username the new username created  
 	 */
 	public void setUsername(String username);
 	

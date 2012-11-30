@@ -1,6 +1,8 @@
-/**
- * 
+/** 
+ * OOSE Project - Group 4
+ * {@link AuthServiceAsync}.java
  */
+
 package edu.jhu.twacker.client.service;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -40,7 +42,6 @@ public interface AuthServiceAsync
 	 * 
 	 * @see edu.jhu.twacker.client.service.AuthService#setUsername()
 	 */
-
 	void setUsername(String username, AsyncCallback<Void> callback);
 
 }

@@ -10,14 +10,14 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import edu.jhu.twacker.shared.exceptions.userExistsException;
 
 /**
+ * Class for registering a user to the Twacker web app
  * @author Disa Mhembere
- *
  */
 @RemoteServiceRelativePath("Register")
 public interface RegisterService extends RemoteService
 {
 	/**
-	 * Register user with no email address
+	 * Register user with personal info & requested credentials 
 	 * @param firstName users first name
 	 * @param lastName users last name
 	 * @param username chosen unique user name

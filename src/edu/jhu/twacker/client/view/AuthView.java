@@ -1,6 +1,6 @@
 /**
  * OOSE Project - Group 4
- * AuthView.java
+ * {@link AuthView}.java
  */
 package edu.jhu.twacker.client.view;
 

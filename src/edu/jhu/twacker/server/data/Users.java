@@ -1,6 +1,6 @@
 /**
  * OOSE Project - Group 4
- * Users.java
+ * {@link Users}.java
  */
 package edu.jhu.twacker.server.data;
 
@@ -15,7 +15,7 @@ import javax.jdo.annotations.PrimaryKey;
 /**
  * Persistence class to hold a users data
  * 
- * @author Disa Mhembere
+ * @author Disa Mhembere	
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class Users
@@ -50,6 +50,7 @@ public class Users
 		this.setFirstName(firstName);
 		this.setLastName(LastName);
 		this.setEmail(email);
+		this.setPassword(password);
 	}
 	
 	/**
