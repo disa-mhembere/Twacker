@@ -52,9 +52,7 @@ public class ExpertsExec extends QueryExec
 		Gson gson = new Gson();
 		
 		ExpertsQuery response = gson.fromJson(wrapper.get(), ExpertsQuery.class);
-		
-		System.out.println(response);
-		
+			
 		this.results = ((ExpertsResponse) response.getResponse());
 		this.experts = this.results.getList();
 	}

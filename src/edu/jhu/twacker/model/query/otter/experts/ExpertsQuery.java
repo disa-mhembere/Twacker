@@ -1,5 +1,8 @@
 package edu.jhu.twacker.model.query.otter.experts;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import edu.jhu.twacker.model.query.otter.OtterQuery;
 import edu.jhu.twacker.model.query.otter.OtterRequest;
 import edu.jhu.twacker.model.query.otter.OtterResponse;
@@ -28,6 +31,16 @@ public class ExpertsQuery implements OtterQuery
 	{
 		this.request = new OtterRequest(new ExpertsParameters(), "experts");
 		this.response = new ExpertsResponse();
+		
+		try 
+		{
+			q = URLEncoder.encode(q, "UTF-8");
+		} 
+		catch (UnsupportedEncodingException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		this.setParameter("q", q);
 	}

@@ -1,5 +1,7 @@
 package edu.jhu.twacker.model.query.twitter;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 
 import com.google.gson.Gson;
@@ -26,7 +28,15 @@ public class SearchTerm
 	 */
 	public SearchTerm(String query)
 	{
-		this.query = query;
+		try 
+		{
+			this.query = URLEncoder.encode(query, "UTF-8");
+		} 
+		catch (UnsupportedEncodingException e) 
+		{
+			this.query = query;
+			e.printStackTrace();
+		}
 	}
 	
 	/**

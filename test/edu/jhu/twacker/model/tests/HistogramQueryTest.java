@@ -1,11 +1,12 @@
 package edu.jhu.twacker.model.tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
 import com.google.gson.Gson;
 
+import edu.jhu.twacker.model.query.HistogramExec;
 import edu.jhu.twacker.model.query.otter.histogram.HistogramQuery;
 
 /**
@@ -23,7 +24,10 @@ public class HistogramQueryTest
 	public void test()
 	{
 		testCreateUrl();
-		testGetResponse();	
+		testGetResponse();
+		testNewYorkTimes();
+		testObama();
+		testWeirdInput();
 	}
 	
 	/**
@@ -51,5 +55,32 @@ public class HistogramQueryTest
 		
 		if (!query.getResponse().toString().equals("[91318, 115596, 596895, 180710, 202516, 193167, 154404, 128905, 156176, 171258]"))
 			fail("HistogramQuery's response did not parse correctly. toString is incorrect.");
+	}
+	
+	private void testObama()
+	{
+		HistogramExec histogram = new HistogramExec("Obama", "86400", "10");
+		histogram.run();
+		
+		if (histogram.getResults().getHistogram().size() != 10)
+			fail("Obama results are the incorrect size");
+	}
+	
+	private void testWeirdInput()
+	{
+		HistogramExec histogram = new HistogramExec("a!@#$ %^&(){]`~", "86400", "10");
+		histogram.run();
+		
+		if (histogram.getResults().getHistogram().size() != 10)
+			fail("Did not get right number of results for random string");
+	}
+	
+	private void testNewYorkTimes()
+	{
+		HistogramExec histogram = new HistogramExec("New York Times", "86400", "30");
+		histogram.run();
+		
+		if (histogram.getResults().getHistogram().size() != 30)
+			fail("Did not get the right number of results from New York Times");
 	}
 }

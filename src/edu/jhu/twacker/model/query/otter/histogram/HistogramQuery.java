@@ -4,6 +4,9 @@
  */
 package edu.jhu.twacker.model.query.otter.histogram;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import edu.jhu.twacker.model.query.otter.OtterQuery;
 import edu.jhu.twacker.model.query.otter.OtterRequest;
 import edu.jhu.twacker.model.query.otter.OtterResponse;
@@ -39,6 +42,15 @@ public class HistogramQuery implements OtterQuery
 	 */
 	public HistogramQuery(String q)
 	{
+		try 
+		{
+			q = URLEncoder.encode(q, "UTF-8");
+		} 
+		catch (UnsupportedEncodingException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		this.request = new OtterRequest(new HistogramParameters(), "searchhistogram");
 		this.response = new HistogramResponse();
 		
