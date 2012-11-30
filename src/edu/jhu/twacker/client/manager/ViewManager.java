@@ -15,6 +15,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import edu.jhu.twacker.client.view.HomeView;
 import edu.jhu.twacker.client.view.AuthView;
 import edu.jhu.twacker.client.view.PersonalHistoryView;
+import edu.jhu.twacker.client.view.RegisterView;
 import edu.jhu.twacker.client.view.View;
 import edu.jhu.twacker.client.view.ViewEnum;
 
@@ -37,6 +38,7 @@ public class ViewManager implements ValueChangeHandler<String>
 		allViews = new HashMap<ViewEnum, View>();
 		allViews.put(ViewEnum.AUTH, new AuthView()); 
 		allViews.put(ViewEnum.HOME, new HomeView());
+		allViews.put(ViewEnum.REGISTER, new RegisterView());
 		
 		History.addValueChangeHandler(this);
 	}

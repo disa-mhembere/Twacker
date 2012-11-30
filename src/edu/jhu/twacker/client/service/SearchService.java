@@ -1,3 +1,8 @@
+/**
+ * OOSE Project - Group 4
+ * {@link SearchService}.java 
+ */
+
 package edu.jhu.twacker.client.service;
 
 import java.util.Date;

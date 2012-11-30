@@ -1,5 +1,6 @@
 /**
- * 
+ * OOSE Project - Group 4
+ * Search.java
  */
 package edu.jhu.twacker.server.data;
 

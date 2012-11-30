@@ -1,20 +1,19 @@
 /**
  * OOSE Project - Group 4
- * AuthServiceImpl.java
+ * {@link AuthService}.java
  */
 package edu.jhu.twacker.server;
+import java.util.List;
 
-//import java.util.Date;
-//import java.util.HashMap;
-//import java.util.Map;
-//import java.util.UUID;
-//import edu.jhu.twacker.shared.Session;
-import com.google.appengine.api.users.User;
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
+import javax.jdo.JDOHelper;
+import javax.jdo.PersistenceManager;
+import javax.jdo.PersistenceManagerFactory;
+import javax.jdo.Query;
+import javax.servlet.http.HttpSession;
 
-import edu.jhu.twacker.client.data.AuthInfo;
 import edu.jhu.twacker.client.service.AuthService;
+import edu.jhu.twacker.server.data.Users;
+
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
@@ -26,41 +25,87 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class AuthServiceImpl extends RemoteServiceServlet implements
 		AuthService
 {
-
-	/**
-	 * For Serialization
-	 */
-
-	//private Map<String, String> users = new HashMap<String, String>(); // user to
-																								// hashed
-																								// password
-																								// mapping
-	//{
-	//	users.put("username", "password"); // Single user with username
-	//}
+	private static final PersistenceManagerFactory PMF =
+	      JDOHelper.getPersistenceManagerFactory("transactions-optional");
 
 	/**
 	 * @see edu.jhu.twacker.client.service.AuthService#signIn(java.lang.String)
 	 */
 	@Override
-	public AuthInfo signIn(String requestUri)
+	public String getUserName()
 	{
-		UserService userService = UserServiceFactory.getUserService();
-		User user = userService.getCurrentUser();
-		AuthInfo loginInfo = new AuthInfo();
-
-		if (user != null)
+		HttpSession httpSession = getThreadLocalRequest().getSession(true);
+		
+		if (httpSession.getAttribute("username") == null)
 		{
-			loginInfo.setLoggedIn(true);
-			loginInfo.setEmailAddress(user.getEmail());
-			loginInfo.setNickname(user.getNickname());
-			loginInfo.setLogoutUrl(userService.createLogoutURL(requestUri));
-		} else
-		{
-			loginInfo.setLoggedIn(false);
-			loginInfo.setLoginUrl(userService.createLoginURL(requestUri));
-		}
-		return loginInfo;
+			return "guest"; // Default user when a user decides to not log in
+		}	
+		return httpSession.getAttribute("username").toString();
+	}
+	
+	@Override
+	/**
+	 * 
+	 * @see edu.jhu.twacker.client.service.AuthService#isSignedIn()
+	 */
+	public boolean isSignedIn()
+	{
+		// TODO DM Auto-generated method stub
+		return false;
 	}
 
+	
+	@Override
+	/**
+	 * 
+	 * @see edu.jhu.twacker.client.service.AuthService#signIn(java.lang.String, java.lang.String)
+	 */
+	public String signIn(String username, String password)
+	{
+		PersistenceManager pm = PMF.getPersistenceManager();
+		Query q = pm.newQuery(Users.class);
+		q.setFilter("username == usernameParam && password == passwordParam");
+
+		q.declareParameters("String usernameParam, String passwordParam");
+		
+		try
+		{
+			@SuppressWarnings("unchecked")
+			List<Users> authenticatedUser = (List<Users>) q.execute(username, password);
+			if (authenticatedUser.size() > 0) // This guy is in the DB
+			{
+				setUsername(username); // Set session username
+				return getUserName(); // Return session username
+			}
+		} finally
+		{
+			pm.close();
+		}
+
+		// If all that fails then blow up for now // TODO DM: Add AuthFailureException
+		return null;
+	}
+
+	/**
+	 * 
+	 * @see edu.jhu.twacker.client.service.AuthService#signOut()
+	 */
+	@Override
+	public String signOut()
+	{
+		// TODO DM Auto-generated method stub
+		return null;
+	}
+
+	/**
+	 * Associate a user with the current httpSession
+	 * thus persisting user session data
+	 * @param username the new username created  
+	 */
+	@Override
+	public void setUsername(String username)
+	{
+	     HttpSession httpSession = getThreadLocalRequest().getSession(true);
+	     httpSession.setAttribute("username", username);
+	}
 }

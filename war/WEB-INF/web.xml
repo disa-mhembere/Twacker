@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee                http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
   <!-- Servlets -->
+  <!-- Authentication Servlet -->
   <servlet>
     <servlet-name>AuthServiceImpl</servlet-name>
     <servlet-class>edu.jhu.twacker.server.AuthServiceImpl</servlet-class>
@@ -11,6 +12,7 @@
     <url-pattern>/twacker/AuthService</url-pattern>
   </servlet-mapping>
   
+  <!-- Search Servlet -->
   <servlet>
     <servlet-name>searchServlet</servlet-name>
     <servlet-class>edu.jhu.twacker.server.SearchServiceImpl</servlet-class>
@@ -19,6 +21,17 @@
   <servlet-mapping>
     <servlet-name>searchServlet</servlet-name>
     <url-pattern>/twacker/search</url-pattern>
+  </servlet-mapping>
+  
+  <!-- Register Servlet -->
+  <servlet>
+    <servlet-name>RegisterServlet</servlet-name>
+    <servlet-class>edu.jhu.twacker.server.RegisterServiceImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>RegisterServlet</servlet-name>
+    <url-pattern>/twacker/Register</url-pattern>
   </servlet-mapping>
   
   <!-- Default page to serve -->
