@@ -104,6 +104,7 @@ public class AuthView extends View
 					@Override
 					public void onSuccess(String result)
 					{
+						infoLabel.setVisible(true);
 						infoLabel.setText("I am: "+result);
 						
 					}
