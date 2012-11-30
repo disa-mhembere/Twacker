@@ -11,6 +11,6 @@ package edu.jhu.twacker.client.view;
  */
 public enum ViewEnum
 {
-	HOME, AUTH, SEARCH  // AL / AT: TODO Add other views
+	HOME, AUTH, SEARCH, REGISTER // AL / AT: TODO Add other views
 
 }

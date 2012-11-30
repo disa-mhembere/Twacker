@@ -8,7 +8,6 @@ package edu.jhu.twacker.client.service;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
-import edu.jhu.twacker.client.data.AuthInfo;
 
 /**
  * 
@@ -18,5 +17,5 @@ import edu.jhu.twacker.client.data.AuthInfo;
 public interface AuthService extends RemoteService
 {
 
-	public AuthInfo signIn(String requestUri);
+	public String getUserName();
 }
