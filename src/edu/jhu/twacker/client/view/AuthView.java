@@ -5,7 +5,6 @@
 package edu.jhu.twacker.client.view;
 
 // Visual features
-import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -23,10 +22,9 @@ import com.google.gwt.event.dom.client.ClickHandler;
 
 // Authentication
 import com.google.gwt.core.client.GWT;
-
-import edu.jhu.twacker.client.data.AuthInfo;
 import edu.jhu.twacker.client.service.AuthService;
 import edu.jhu.twacker.client.service.AuthServiceAsync;
+import edu.jhu.twacker.shared.FieldVerifier;
 
 /**
  * View for user sign-in & sign-up If a user chooses to not sign-up/sign-in the
@@ -37,9 +35,9 @@ import edu.jhu.twacker.client.service.AuthServiceAsync;
 public class AuthView extends View
 {
 
-
 	private final AuthServiceAsync authService = GWT.create(AuthService.class);
-	Hyperlink registerHyperlink = new Hyperlink("No username? Sign-up!", "REGISTER");
+	Hyperlink registerHyperlink = new Hyperlink("No username? Sign-up!",
+			"REGISTER");
 
 	// Sign-in
 
@@ -48,8 +46,9 @@ public class AuthView extends View
 	private PasswordTextBox signInPasswordBox = new PasswordTextBox();
 	private Button signInButton = new Button("Sign-in");
 	private Button continueNoSignInButton = new Button("I don't want to Sign-in");
-	private Label signInInfoLabel = new Label();
+	private Label infoLabel = new Label();
 
+	private Button whoami = new Button("WhoamI");
 	/**
 	 * Default constructor loads up sign-in & sign-up view forms
 	 */
@@ -57,13 +56,13 @@ public class AuthView extends View
 	{
 
 		usernameTextBox.setText("e.g gangnam");
-		signInInfoLabel.setVisible(false);
+		infoLabel.setVisible(false);
 
 		// Assemble sign-in panel
 		signInPanel.add(new Label("Twacker Sign-in"));
-		signInPanel.add(new Label("Gmail address"));
+		signInPanel.add(new Label("Username"));
 		signInPanel.add(usernameTextBox);
-		signInPanel.add(new Label("Twacker Password"));
+		signInPanel.add(new Label("Password"));
 		signInPanel.add(signInPasswordBox);
 
 		Grid buttonPanel = new Grid(1, 2);
@@ -71,7 +70,9 @@ public class AuthView extends View
 		buttonPanel.setWidget(0, 1, continueNoSignInButton);
 		signInPanel.add(buttonPanel);
 		signInPanel.add(registerHyperlink);
-		signInPanel.add(signInInfoLabel);
+		signInPanel.add(infoLabel);
+		
+		signInPanel.add(whoami);
 
 		// Listen for mouse events on the sign-in button.
 		signInButton.addClickHandler(new ClickHandler()
@@ -79,7 +80,7 @@ public class AuthView extends View
 			@Override
 			public void onClick(ClickEvent event)
 			{
-				requestLogin();
+				requestSignIn(usernameTextBox.getText(), signInPasswordBox.getText());
 			}
 		});
 
@@ -88,7 +89,32 @@ public class AuthView extends View
 			@Override
 			public void onClick(ClickEvent event)
 			{
-				requestNoLogin();
+				requestNoSignIn();
+			}
+		});
+		
+		whoami.addClickHandler(new ClickHandler()
+		{
+			
+			@Override
+			public void onClick(ClickEvent event)
+			{
+				authService.getUserName(new AsyncCallback<String>()
+				{
+					@Override
+					public void onSuccess(String result)
+					{
+						infoLabel.setText("I am: "+result);
+						
+					}
+					@Override
+					public void onFailure(Throwable caught)
+					{
+						infoLabel.setText("Damnit!");
+						
+					}
+				});
+				
 			}
 		});
 
@@ -100,31 +126,103 @@ public class AuthView extends View
 	 * Requests access to Twacker homepage without passing a username and
 	 * password thus passes in the default values
 	 */
-	public void requestNoLogin()
+	public void requestNoSignIn()
 	{
-		signInInfoLabel.setVisible(false);
-		History.newItem("HOME"); // Don't want to login? Then redirect to homepage
+		infoLabel.setVisible(false);
+
+		authService.setUsername("guest", new AsyncCallback<Void>()
+		{
+			
+			@Override
+			public void onSuccess(Void result)
+			{
+				infoLabel.setVisible(true);
+				infoLabel.setText("Entering Twacker site as guest");
+				History.newItem("HOME"); // Don't want to login? Then redirect to homepage
+			}
+			
+			@Override
+			public void onFailure(Throwable caught)
+			{
+				infoLabel.setVisible(true);
+				infoLabel.setText("Failure to enter Twacker site as guest");
+			}
+		});
 	}
 
 	/**
-	 * Requests access to Twacker homepage via a login username and password
+	 * Requests access to Twacker homepage via a signIn username and password
 	 */
-	public void requestLogin()
+	public void requestSignIn(String username, String password)
 	{
-		signInInfoLabel.setVisible(false);
-
-		authService.getUserName(new AsyncCallback<String>()
+		infoLabel.setVisible(false);
+		if (validateFields(username, password))
+		{
+			authService.signIn(password, password, new AsyncCallback<String>()
+			{
+				@Override
+				public void onSuccess(String result)
 				{
-					public void onFailure(Throwable error)
-					{
-						Log.debug("DM Failure");
-					}
-
-					public void onSuccess(String result)
-					{
-						Log.debug(result);
-					}
-				});
-
+					infoLabel.setVisible(true);
+					infoLabel.setText("Sign-in Sucessful! Welcome "+ result);
+					History.newItem("HOME");
+				}
+				
+				@Override
+				public void onFailure(Throwable caught)
+				{
+					infoLabel.setVisible(true);
+					infoLabel.setText("Sign-in Failed! Try again..");
+//					Log.debug("DM: Failure in edu.jhu.twacker.client.view Authview.requestSignIn");
+				}
+			});
+		}
+		
+		// TODO DM: If I get down here clear the fields of the form
 	}
+
+	/**
+	 * Validate input fields as being at least viable
+	 * 
+	 * @param username the requested username
+	 * @param pwd the requested password
+	 * @return true if all fields are OK else false
+	 */
+	public boolean validateFields(String username, String pwd)
+	{
+
+		// Confirm valid user name
+		if (!FieldVerifier.isValidUserName(username))
+		{
+			infoLabel.setVisible(true);
+			if (username.length() < 3)
+			{
+				infoLabel
+						.setText("Username too short. That can't be your username");
+			} else
+			{
+				infoLabel.setText("Invalid username. Try again");
+			}
+			return false;
+		}
+
+		// Confirm valid password
+		if (!FieldVerifier.isValidPassword(pwd))
+		{
+			infoLabel.setVisible(true);
+			if (pwd.length() < 5)
+			{
+				infoLabel.setText("Password too short. Min 5 characters");
+			} else
+			{
+				infoLabel.setText("Invalid Password. No whitespace permitted");
+			}
+			return false;
+		}
+
+		infoLabel.setVisible(true);
+		infoLabel.setText("Requesting validation...");
+		return true;
+	}
+
 }

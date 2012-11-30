@@ -65,9 +65,9 @@ public class RegisterServiceImpl extends RemoteServiceServlet implements Registe
 	
 	/**
 	 * Check if a user with the requested credentials already exists
-	 * @param username
-	 * @param email
-	 * @return
+	 * @param username the users requested username
+	 * @param email the users requested email address
+	 * @return true if the user exists else false
 	 */
 	private boolean checkUserExists(String username, String email)
 	{
