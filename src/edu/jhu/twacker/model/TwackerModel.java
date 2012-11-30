@@ -47,6 +47,9 @@ public class TwackerModel
 	 */
 	private String jsonResult;
 	
+	/**
+	 * The result of the queries.
+	 */
 	private Result result;
 	
 	/**
