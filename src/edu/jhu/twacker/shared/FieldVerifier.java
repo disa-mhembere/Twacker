@@ -1,23 +1,19 @@
-/** 
+/**
  * OOSE Project - Group 4
- * {@link FieldVerifier}.java
+ * {@link FieldVerifier2}.java
  */
-
 package edu.jhu.twacker.shared;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-
+import com.google.gwt.regexp.shared.RegExp;
 
 /**
  * FieldVerifier validates that the name the user enters is valid.
  * 
  * @author Disa Mhembere, Alex Long
- */
+*/
 public class FieldVerifier
 {
-
+	
 	public final static String PRIMARY_DEFAULT = "(required)";
 	public final static String SECONDARY_DEFAULT = "(optional)";
 	
@@ -28,9 +24,8 @@ public class FieldVerifier
 	 */
 	public static boolean isValidEmail(String emailAdd)
 	{
-		Pattern p = Pattern.compile(".+@.+\\..+");
-		Matcher m = p.matcher(emailAdd);
-		return m.matches();
+		RegExp p = RegExp.compile(".+@.+\\..+");
+		return p.test(emailAdd);
 	}
 
 	/**
@@ -41,10 +36,9 @@ public class FieldVerifier
 	public static boolean isValidUserName(String name)
 	{
 
-		Pattern p = Pattern.compile("[^a-zA-Z0-9]"); // No special Characters
-		Matcher m = p.matcher(name);
-
-		if (name == null || m.find() || name.length() < 3)
+		RegExp p = RegExp.compile("[^a-zA-Z0-9]"); // No special Characters
+		
+		if (name == null || p.test(name) || name.length() < 3)
 		{
 			return false;
 		}
@@ -58,10 +52,10 @@ public class FieldVerifier
 	 */
 	public static boolean isValidPassword(String password)
 	{
-		Pattern p = Pattern.compile("\\s"); // No spaces in password
-		Matcher m = p.matcher(password);
-
-		return !(password == null || m.find() || password.length() < 5);
+		RegExp p = RegExp.compile("\\s"); // No spaces in password
+		System.out.println(p.test(password));
+		return !(password == null || p.test(password) || password.length() < 5);
+	 
 	}
 	
 	/**
@@ -72,10 +66,9 @@ public class FieldVerifier
 	 */
 	public static boolean isValidName(String name)
 	{
-		Pattern p = Pattern.compile("[A-Z][a-z]*|[a-z]+"); // No special Characters
-		Matcher m = p.matcher(name);
+		RegExp p = RegExp.compile("^[A-Z][a-z]"); // No special Characters (^([A-Z])[a-z]*)|([a-z]+)
+		return p.test(name);
 		
-		return (m.matches());
 	}
 	
 	/**
