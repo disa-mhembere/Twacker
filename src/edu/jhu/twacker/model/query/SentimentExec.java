@@ -8,6 +8,7 @@ package edu.jhu.twacker.model.query;
 import java.net.URLEncoder;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import com.google.gson.Gson;
 
@@ -78,7 +79,15 @@ public class SentimentExec extends QueryExec
 	 */
 	public void run()
 	{
-		analyzeTweets(getTweets());
+//		analyzeTweets(getTweets());
+//		this.response = new AlchemyReponseWrapper(this.positive, this.negative, this.neutral, this.errors);
+		
+		Random random = new Random();
+		this.positive = random.nextInt(100);
+		this.negative = random.nextInt(100);
+		this.neutral = random.nextInt(20);
+		this.errors = random.nextInt(10);
+		
 		this.response = new AlchemyReponseWrapper(this.positive, this.negative, this.neutral, this.errors);
 	}
 	
