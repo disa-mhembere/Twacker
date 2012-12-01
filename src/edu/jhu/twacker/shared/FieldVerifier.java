@@ -53,7 +53,6 @@ public class FieldVerifier
 	public static boolean isValidPassword(String password)
 	{
 		RegExp p = RegExp.compile("\\s"); // No spaces in password
-		System.out.println(p.test(password));
 		return !(password == null || p.test(password) || password.length() < 5);
 	 
 	}

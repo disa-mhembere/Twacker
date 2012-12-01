@@ -176,7 +176,7 @@ public class RegisterView extends View
 
 		infoLabel.setVisible(false);
 		// Confirm valid first name
-		if (!FieldVerifier.isValidUserName(firstName))
+		if (!FieldVerifier.isValidName(firstName))
 		{
 			infoLabel.setVisible(true);
 			infoLabel.setText("Invalid First Name");
@@ -184,18 +184,10 @@ public class RegisterView extends View
 		}
 
 		// Confirm valid last name
-		if (!FieldVerifier.isValidUserName(lastName))
+		if (!FieldVerifier.isValidName(lastName))
 		{
 			infoLabel.setVisible(true);
 			infoLabel.setText("Invalid Last Name");
-			return false;
-		}
-
-		// Confirm password matching
-		if (!pwd.equals(confirmPwd))
-		{
-			infoLabel.setVisible(true);
-			infoLabel.setText("Passwords do not match");
 			return false;
 		}
 
@@ -213,7 +205,7 @@ public class RegisterView extends View
 			}
 			return false;
 		}
-
+		
 		// Confirm valid password
 		if (!FieldVerifier.isValidPassword(pwd))
 		{
@@ -225,6 +217,14 @@ public class RegisterView extends View
 			{
 				infoLabel.setText("Invalid Password. (Btdubz: No spaces)");
 			}
+			return false;
+		}
+
+		// Confirm password matching
+		if (!pwd.equals(confirmPwd))
+		{
+			infoLabel.setVisible(true);
+			infoLabel.setText("Passwords do not match");
 			return false;
 		}
 
