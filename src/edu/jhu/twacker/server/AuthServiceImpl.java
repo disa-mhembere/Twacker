@@ -37,11 +37,11 @@ public class AuthServiceImpl extends RemoteServiceServlet implements
 	{
 		HttpSession httpSession = getThreadLocalRequest().getSession(true);
 
-		if (httpSession.getAttribute("username") == null)
-		{
-			setUsername("guest");
-			return getUserName(); // Default user when a user decides to not log in
-		}
+//		if (httpSession.getAttribute("username") == null)
+//		{
+//			setUsername("guest");
+//			return getUserName(); // Default user when a user decides to not log in
+//		}
 		return httpSession.getAttribute("username").toString();
 	}
 
@@ -63,7 +63,7 @@ public class AuthServiceImpl extends RemoteServiceServlet implements
 	 */
 	public String signIn(String username, String password)
 	{
-		PersistenceManager pm = PMF.getPersistenceManager();
+		PersistenceManager pm = PMF.getPersistenceManager(); // TODO: PersistenceManager pm = PMF.getPersistenceManager("transactions-optional");
 		Query q = pm.newQuery(Users.class);
 		q.setFilter("username == usernameParam && password == passwordParam");
 

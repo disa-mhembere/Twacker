@@ -6,30 +6,20 @@ package edu.jhu.twacker.server;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
+import javax.jdo.Query;
+import javax.servlet.http.HttpSession;
 //import javax.jdo.Query;
 
 import edu.jhu.twacker.client.service.SearchService;
 import edu.jhu.twacker.model.TwackerModel;
 import edu.jhu.twacker.server.data.Search;
 
-//import com.allen_sauer.gwt.log.client.Log;
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.Query.Filter;
-import com.google.appengine.api.datastore.Query.FilterPredicate;
-import com.google.appengine.api.datastore.Query.FilterOperator;
-import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.PreparedQuery;
-
-import com.google.appengine.api.users.User;
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 
@@ -43,9 +33,6 @@ public class SearchServiceImpl extends RemoteServiceServlet implements
 
 	private static final PersistenceManagerFactory PMF =
 	      JDOHelper.getPersistenceManagerFactory("transactions-optional");
-	
-	// Get the Datastore Service
-	private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 	
 	/**
 	 * 
@@ -66,7 +53,7 @@ public class SearchServiceImpl extends RemoteServiceServlet implements
 	{
 		PersistenceManager pm = getPersistenceManager();
 	    try {
-	      pm.makePersistent(new Search(getUser(), search));
+	      pm.makePersistent(new Search(getUsername(), search));
 	    } finally {
 	      pm.close();
 	    }
@@ -80,60 +67,32 @@ public class SearchServiceImpl extends RemoteServiceServlet implements
 	 */
 	public Map<Date, String> getAllSearches()
 	{
-//		PersistenceManager pm = getPersistenceManager();
+		PersistenceManager pm = getPersistenceManager();
 		Map<Date, String> result = new HashMap<Date, String>();
 		
-		Filter isUser = new FilterPredicate("user", FilterOperator.EQUAL, new User("guest", "gmail.com")); //DM: TODO Temporary
-		Query q = new Query("Search").setFilter(isUser);
-		PreparedQuery pq = datastore.prepare(q);
+		Query q = pm.newQuery(Search.class);
+		q.setFilter("username == usernameParam");
+
+		q.declareParameters("String usernameParam");
+		
+		@SuppressWarnings("unchecked")
+		List<Search> retSearches = (List<Search>) q.execute( getUsername());
 		
 		try
 		{
-			for (Entity retSearches : pq.asIterable())
+			for (Search searchObj : retSearches)
 			{
-				// String user = (String) retSearches.getProperty("user");
-				// result.add(user);
-				// String searchTerm = (String)
-				// retSearches.getProperty("searchTerm");
-				result.put((Date) retSearches.getProperty("createDate"),
-						(String) retSearches.getProperty("searchTerm"));
+//				Date newDate = new Date(searchObj.getCreateDate().getTime());		 
+//				result.put(newDate, (String)searchObj.getSearchTerm()); 
+				
+				result.put(new Date(searchObj.getCreateDate().getTime()),(String)searchObj.getSearchTerm()); // TODO : DM Fix duplicated
 			}
 		} catch (Exception e)
 		{
 			// DM OK to return empty hashMap 
 			// result.put(new Date(), "No user entries for" + getUser());
 		}
-
-		/*
-		try
-		{
-			
-			Query q = pm.newQuery(Search.class, "user == u");
-			q.declareParameters("com.google.appengine.api.users.User u");
-			q.setOrdering("createDate");
-			@SuppressWarnings("unchecked")
-			//List<Search> searches = (List<Search>) q.execute(getUser());
-			List<Search> searches = (List<Search>) q.execute("guest");
-			
-			if (searches.size() == 0)
-			{
-				result.add("No Entries for user "+ getUser());
-			}
-			
-			else
-			{
-				for (Search searchTerm : searches)
-				{
-					result.add(searchTerm.toString());
-				}
-			}
-		} finally
-		{
-			pm.close();
-		}
-		*/
-
-		return result;
+				return result;
 	}
 	
 	@Override
@@ -168,13 +127,15 @@ public class SearchServiceImpl extends RemoteServiceServlet implements
 	}
 	
 	/**
-	 * Gets the current user name/id
-	 * @return the current user
+	 * Get the user with the current httpSession
+	 * @return username the users username  
 	 */
-	private User getUser() {
-	    UserService userService = UserServiceFactory.getUserService();
-	    return userService.getCurrentUser();
-	  }
+	public String getUsername()
+	{
+		HttpSession httpSession = getThreadLocalRequest().getSession(true);
+		return httpSession.getAttribute("username").toString(); 
+	}
+	
 	
 	/**
 	 * Get the persistence manager instance

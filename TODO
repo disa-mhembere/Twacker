@@ -1,2 +1,2 @@
-DM : Fix Search.java & make it user our Users class for storage & not googles
-DM : Fix SearchService to user our Users class for storage & not googles
+DM : Fix return of map for search services
+DM : Fix forced view change NPE

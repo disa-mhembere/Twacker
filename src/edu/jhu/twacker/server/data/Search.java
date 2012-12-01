@@ -17,7 +17,7 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
-import com.google.appengine.api.users.User;
+
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class Search
@@ -27,7 +27,7 @@ public class Search
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	private Long id;
 	@Persistent
-	private User user;
+	private String username;
 	@Persistent
 	private String searchTerm;
 	@Persistent
@@ -38,47 +38,76 @@ public class Search
 		this.createDate = new Date();
 	}
 
-	public Search(User user, String searchTerm)
+	public Search(String username, String searchTerm)
 	{
 		this();
-		if (user == null)
-		{
-			this.user = new User("guest", "gmail.com"); // Not signed in
-		} else
-		{
-			this.user = user;
-		}
-
-		this.searchTerm = searchTerm;
+		this.setUsername(username);
+		this.setSearchTerm(searchTerm);
 	}
 
+	/**
+	 * @return the id
+	 */
 	public Long getId()
 	{
-		return this.id;
+		return id;
 	}
 
-	public User getUser()
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Long id)
 	{
-		return this.user;
+		this.id = id;
 	}
 
+	/**
+	 * @return the username
+	 */
+	public String getUsername()
+	{
+		return username;
+	}
+
+	/**
+	 * @param username the username to set
+	 */
+	public void setUsername(String username)
+	{
+		this.username = username;
+	}
+
+	/**
+	 * @return the searchTerm
+	 */
 	public String getSearchTerm()
 	{
-		return this.searchTerm;
+		return searchTerm;
 	}
 
-	public Date getCreateDate()
-	{
-		return this.createDate;
-	}
-
-	public void setUser(User user)
-	{
-		this.user = user;
-	}
-
-	public void setQuery(String searchTerm)
+	/**
+	 * @param searchTerm the searchTerm to set
+	 */
+	public void setSearchTerm(String searchTerm)
 	{
 		this.searchTerm = searchTerm;
 	}
+
+	/**
+	 * @return the createDate
+	 */
+	public Date getCreateDate()
+	{
+		return createDate;
+	}
+
+	/**
+	 * @param createDate the createDate to set
+	 */
+	public void setCreateDate(Date createDate)
+	{
+		this.createDate = createDate;
+	}
+
+	
 }
