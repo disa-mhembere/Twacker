@@ -3,6 +3,7 @@
  * {@link AuthService}.java
  */
 package edu.jhu.twacker.server;
+
 import java.util.List;
 
 import javax.jdo.JDOHelper;
@@ -25,8 +26,8 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class AuthServiceImpl extends RemoteServiceServlet implements
 		AuthService
 {
-	private static final PersistenceManagerFactory PMF =
-	      JDOHelper.getPersistenceManagerFactory("transactions-optional");
+	private static final PersistenceManagerFactory PMF = JDOHelper
+			.getPersistenceManagerFactory("transactions-optional");
 
 	/**
 	 * @see edu.jhu.twacker.client.service.AuthService#signIn(java.lang.String)
@@ -35,15 +36,15 @@ public class AuthServiceImpl extends RemoteServiceServlet implements
 	public String getUserName()
 	{
 		HttpSession httpSession = getThreadLocalRequest().getSession(true);
-		
+
 		if (httpSession.getAttribute("username") == null)
 		{
 			setUsername("guest");
 			return getUserName(); // Default user when a user decides to not log in
-		}	
+		}
 		return httpSession.getAttribute("username").toString();
 	}
-	
+
 	@Override
 	/**
 	 * 
@@ -55,7 +56,6 @@ public class AuthServiceImpl extends RemoteServiceServlet implements
 		return false;
 	}
 
-	
 	@Override
 	/**
 	 * 
@@ -68,7 +68,7 @@ public class AuthServiceImpl extends RemoteServiceServlet implements
 		q.setFilter("username == usernameParam && password == passwordParam");
 
 		q.declareParameters("String usernameParam, String passwordParam");
-		
+
 		try
 		{
 			@SuppressWarnings("unchecked")
@@ -83,7 +83,8 @@ public class AuthServiceImpl extends RemoteServiceServlet implements
 			pm.close();
 		}
 
-		// If all that fails then blow up for now // TODO DM: Add AuthFailureException
+		// If all that fails then blow up for now // TODO DM: Add
+		// AuthFailureException
 		return null;
 	}
 
@@ -105,7 +106,7 @@ public class AuthServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public void setUsername(String username)
 	{
-	     HttpSession httpSession = getThreadLocalRequest().getSession(true);
-	     httpSession.setAttribute("username", username);
+		HttpSession httpSession = getThreadLocalRequest().getSession(true);
+		httpSession.setAttribute("username", username);
 	}
 }

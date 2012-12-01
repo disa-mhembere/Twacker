@@ -111,7 +111,7 @@ public class AuthView extends View
 					@Override
 					public void onFailure(Throwable caught)
 					{
-						infoLabel.setText("Damnit!");
+						infoLabel.setText("There was a failure!");
 						
 					}
 				});
@@ -159,14 +159,22 @@ public class AuthView extends View
 		infoLabel.setVisible(false);
 		if (validateFields(username, password))
 		{
-			authService.signIn(password, password, new AsyncCallback<String>()
+			authService.signIn(username, password, new AsyncCallback<String>()
 			{
 				@Override
 				public void onSuccess(String result)
 				{
+					if (result == null)
+					{
+						infoLabel.setVisible(true);
+						infoLabel.setText("incorrect username or password");
+					}
+					else
+					{
 					infoLabel.setVisible(true);
 					infoLabel.setText("Sign-in Sucessful! Welcome "+ result);
 					History.newItem("HOME");
+					}
 				}
 				
 				@Override

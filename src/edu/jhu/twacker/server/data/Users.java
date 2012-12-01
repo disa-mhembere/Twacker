@@ -36,7 +36,7 @@ public class Users
 	private String password;
 
 	/**
-	 * Default consructor
+	 * Default constructor
 	 */
 	public Users()
 	{
