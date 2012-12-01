@@ -4,6 +4,8 @@
  */
 package edu.jhu.twacker.client.view;
 
+import java.util.LinkedList;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -14,6 +16,8 @@ import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TabPanel;
@@ -31,6 +35,7 @@ import com.google.gwt.visualization.client.visualizations.corechart.PieChart;
 
 import edu.jhu.twacker.client.service.SearchService;
 import edu.jhu.twacker.client.service.SearchServiceAsync;
+import edu.jhu.twacker.shared.FieldVerifier;
 
 /**
  * The Home view
@@ -50,9 +55,15 @@ public class HomeView extends View {
 	//	private Label homeLabel;
 	private Label saveStatusLabel;
 
+	private VerticalPanel searchPanel = new VerticalPanel();
+	private HorizontalPanel boxPanel = new HorizontalPanel();
 	private TextBox searchBox = new TextBox();
+	private TextBox searchBox2 = new TextBox();
+	private TextBox searchBox3 = new TextBox();		
 	private Button searchButton = new Button("Search");
+	
 	private Label infoLabel = new Label();
+	private Label errLabel = new Label();
 	
 	private LineChart line;
 	private PieChart pie;
@@ -74,25 +85,58 @@ public class HomeView extends View {
 		mainPanel.add(signInUp);
 		//mainPanel.add(logOut);		
 		//		mainPanel.add(homeLabel);
-
-		mainPanel.add(searchBox);
-		mainPanel.add(searchButton);
-		mainPanel.add(infoLabel);
-		mainPanel.add(saveStatusLabel);
-
-		initWidget(mainPanel);
-
-		searchBox.setFocus(true);
+		
+		boxPanel.add(searchBox);
+		boxPanel.add(searchBox2);
+		boxPanel.add(searchBox3);
+		searchPanel.add(boxPanel);
+		searchPanel.add(searchButton);
+	    searchPanel.setCellHorizontalAlignment(searchButton, HasHorizontalAlignment.ALIGN_RIGHT);
+	    
+	    searchBox.setFocus(true);
+		searchBox.setText(FieldVerifier.PRIMARY_DEFAULT);
+		searchBox2.setText(FieldVerifier.SECONDARY_DEFAULT);
+		searchBox3.setText(FieldVerifier.SECONDARY_DEFAULT);
 		searchBox.selectAll();
+		
+		mainPanel.add(searchPanel);
+		mainPanel.add(infoLabel);
+		mainPanel.add(errLabel);
+		mainPanel.add(saveStatusLabel);
+		
+		resultsTab.add(histogramPanel, "Histogram");
+		resultsTab.add(sentimentPanel, "Sentiment");
+		resultsTab.setVisible(false);
+		mainPanel.add(resultsTab);
+
+		initWidget(mainPanel);		
 
 		// Create a handler for the sendButton and nameField
-		class MyHandler implements ClickHandler, KeyUpHandler {
+		class SearchButtonHandler implements ClickHandler, KeyUpHandler {
+			
+			private LinkedList<String> searchTerms;
 			/**
 			 * Fired when the user clicks on the sendButton.
 			 */
 			public void onClick(ClickEvent event) {
-				saveSearchTerm(searchBox.getText());
-				sendQueryToServer();
+				if (!FieldVerifier.isValidSearch(searchBox.getText())) {
+					infoLabel.setText("Invalid Required Field");
+					return;
+				}
+				else {
+					searchTerms = new LinkedList<String>();
+					saveSearchTerm(searchBox.getText());
+					searchTerms.add(searchBox.getText());
+					if (FieldVerifier.isValidSearch(searchBox2.getText())) {
+						searchTerms.add(searchBox2.getText());
+						saveSearchTerm(searchBox2.getText());
+					}
+					if (FieldVerifier.isValidSearch(searchBox3.getText())) {
+						searchTerms.add(searchBox3.getText());
+						saveSearchTerm(searchBox3.getText());
+					}
+					sendQueryToServer(searchTerms);
+				}				
 			}
 
 			/**
@@ -100,8 +144,24 @@ public class HomeView extends View {
 			 */
 			public void onKeyUp(KeyUpEvent event) {
 				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-					saveSearchTerm(searchBox.getText());
-					sendQueryToServer();
+					if (!FieldVerifier.isValidSearch(searchBox.getText())) {
+						infoLabel.setText("Invalid Required Field");
+						return;
+					}
+					else {
+						searchTerms = new LinkedList<String>();
+						saveSearchTerm(searchBox.getText());
+						searchTerms.add(searchBox.getText());
+						if (FieldVerifier.isValidSearch(searchBox2.getText())) {
+							searchTerms.add(searchBox2.getText());
+							saveSearchTerm(searchBox2.getText());
+						}
+						if (FieldVerifier.isValidSearch(searchBox3.getText())) {
+							searchTerms.add(searchBox3.getText());
+							saveSearchTerm(searchBox3.getText());
+						}
+						sendQueryToServer(searchTerms);
+					}
 				}
 			}
 
@@ -109,45 +169,55 @@ public class HomeView extends View {
 			 * Send the name from the nameField to
 			 *  the server and wait for a response.
 			 */
-			private void sendQueryToServer() {
+			private void sendQueryToServer(LinkedList<String> terms) {
 				infoLabel.setText("Gathering Data!");
-				String textToServer = searchBox.getText();
-				queryService.queryServer(textToServer, new AsyncCallback<String>() {
-					public void onFailure(Throwable caught) {
-						infoLabel.setText("There was an error");
-					}
-
-					public void onSuccess(String result) {
-						infoLabel.setText("");						
-
-//						TODO FIX THIS
-						if (pie != null && line != null) {
-							histogramPanel.remove(line);
-							sentimentPanel.remove(pie);
+				errLabel.setText("");
+				histogramPanel.clear();
+				sentimentPanel.clear();
+				for (String s : terms) {
+					queryService.queryServer(s, new AsyncCallback<String>() {
+						public void onFailure(Throwable caught) {
+							errLabel.setText(caught.toString());
 						}
-						// Create a pie chart visualization.
-						line = new LineChart(createLineGraphs(result), createOptions());
-						line.addSelectHandler(createSelectHandler(line));
-						
-						// Create a pie chart visualization.
-						pie = new PieChart(createPieChart(result), createOptions());
-						pie.addSelectHandler(createSelectHandler(pie));
-						histogramPanel.add(line);
-						sentimentPanel.add(pie);
-						resultsTab.add(histogramPanel, "Histogram");
-						resultsTab.add(sentimentPanel, "Sentiment");
-						//resultsTab.selectTab(0);
-						mainPanel.add(resultsTab);
-					}
-				});
+
+						public void onSuccess(String result) {
+							if (pie == null && line == null) {
+								line = new LineChart(createLineGraphs(result), createOptions(result));
+								line.addSelectHandler(createSelectHandler(line));
+
+								pie = new PieChart(createPieChart(result), createOptions(result));
+								pie.addSelectHandler(createSelectHandler(pie));
+
+								histogramPanel.add(line);
+								sentimentPanel.add(pie);
+								resultsTab.setVisible(true);
+								resultsTab.selectTab(0);							
+							}
+							else {
+//								line.draw(createLineGraphs(result), createOptions());
+//								pie.draw(createPieChart(result), createOptions());
+								line = new LineChart(createLineGraphs(result), createOptions(result));
+								line.addSelectHandler(createSelectHandler(line));
+
+								pie = new PieChart(createPieChart(result), createOptions(result));
+								pie.addSelectHandler(createSelectHandler(pie));
+
+								histogramPanel.add(line);
+								sentimentPanel.add(pie);
+								resultsTab.selectTab(0);
+							}
+						}
+					});
+				}
 			}
 		}
-
+		
 		// Add a handler to send the name to the server
-		MyHandler handler = new MyHandler();
+		SearchButtonHandler handler = new SearchButtonHandler();
 		searchButton.addClickHandler(handler);
 		searchBox.addKeyUpHandler(handler);
-
+		searchBox2.addKeyUpHandler(handler);
+		searchBox3.addKeyUpHandler(handler);
 	}
 
 	/**
@@ -175,11 +245,11 @@ public class HomeView extends View {
 				});
 	}
 
-	private Options createOptions() {
+	private Options createOptions(String result) {
 		Options options = Options.create();
 		options.setWidth(400);
 		options.setHeight(240);
-		options.setTitle("Twacker Results");
+		options.setTitle("Twacker Results for " + result.substring(result.indexOf(": \""), result.indexOf("\",")));
 		options.setPointSize(5);
 		AxisOptions opt = AxisOptions.create();
 		opt.set("viewWindowMode", "pretty");

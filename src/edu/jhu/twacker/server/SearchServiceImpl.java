@@ -41,7 +41,6 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class SearchServiceImpl extends RemoteServiceServlet implements
 		SearchService {
 
-	private TwackerModel model;
 	private static final PersistenceManagerFactory PMF =
 	      JDOHelper.getPersistenceManagerFactory("transactions-optional");
 	
@@ -53,9 +52,8 @@ public class SearchServiceImpl extends RemoteServiceServlet implements
 	 * @see edu.jhu.twacker.client.service.SearchService#queryServer(java.lang.String)
 	 */ 
 	public String queryServer(String input) throws IllegalArgumentException {
-		
-		model = new TwackerModel(input);
-		model.run();		
+		TwackerModel model = new TwackerModel(input);
+		model.run();
 		return model.toString();
 	}
 

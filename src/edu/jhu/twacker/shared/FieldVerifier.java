@@ -8,14 +8,19 @@ package edu.jhu.twacker.shared;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
+
 /**
  * FieldVerifier validates that the name the user enters is valid.
  * 
- * @author Disa Mhembere
+ * @author Disa Mhembere, Alex Long
  */
 public class FieldVerifier
 {
 
+	public final static String PRIMARY_DEFAULT = "(required)";
+	public final static String SECONDARY_DEFAULT = "(optional)";
+	
 	/**
 	 * Verify that an email address provided is at least of valid format
 	 * @param emailAdd the users email address
@@ -71,5 +76,20 @@ public class FieldVerifier
 		Matcher m = p.matcher(name);
 		
 		return (m.matches());
+	}
+	
+	/**
+	 * Verifies that the search term is not the default or empty.
+	 * The only other requirement is that the String is at least 3 characters.
+	 * 
+	 * @param search the user's search term
+	 * @return true if valid, else false
+	 */
+	public static boolean isValidSearch(String search) 
+	{
+		if (search == null || search.equals(PRIMARY_DEFAULT) || search.equals(SECONDARY_DEFAULT)) {
+			return false;
+		}
+		return search.length() >= 3;
 	}
 }
