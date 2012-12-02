@@ -5,6 +5,7 @@
 package edu.jhu.twacker.client.service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -30,12 +31,12 @@ public interface SearchServiceAsync {
 	 * 
 	 * @see edu.jhu.twacker.client.service.SearchService#getAllSearches(java.util.Map<java.util.Date, java.lang.String>)
 	 */
-	void getAllSearches(AsyncCallback<Map<Date,String>> callback);
+	void getAllSearches(AsyncCallback<Map<Date,List<String>>> callback);
 
 	/**
 	 * 
 	 * @see edu.jhu.twacker.client.service.SearchService#getDaySearches(java.util.Map<java.util.Date, java.lang.String>)
 	 */
-	void getDaySearches(Date newParam, AsyncCallback<Map<Date, String>> callback);
+	void getDaySearches(Date newParam, AsyncCallback<Map<Date, List<String>>> callback);
 
 }
