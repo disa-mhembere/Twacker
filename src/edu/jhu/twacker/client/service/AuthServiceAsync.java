@@ -16,9 +16,9 @@ public interface AuthServiceAsync
 
 	/**
 	 * 
-	 * @see edu.jhu.twacker.client.service.AuthService#getUserName()
+	 * @see edu.jhu.twacker.client.service.AuthService#getUsername()
 	 */
-	void getUserName(AsyncCallback<String> callback);
+	void getUsername(AsyncCallback<String> callback);
 
 	/**
 	 * 

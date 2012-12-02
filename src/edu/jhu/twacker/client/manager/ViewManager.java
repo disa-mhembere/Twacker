@@ -8,33 +8,45 @@ package edu.jhu.twacker.client.manager;
 import java.util.HashMap;
 
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 
+import edu.jhu.twacker.client.service.AuthService;
+import edu.jhu.twacker.client.service.AuthServiceAsync;
 import edu.jhu.twacker.client.view.HomeView;
 import edu.jhu.twacker.client.view.AuthView;
+import edu.jhu.twacker.client.view.SignOutView;
 import edu.jhu.twacker.client.view.PersonalHistoryView;
 import edu.jhu.twacker.client.view.RegisterView;
 import edu.jhu.twacker.client.view.View;
 import edu.jhu.twacker.client.view.ViewEnum;
 
 /**
- * This class manages the changing the of views.
- * It determines the view requested and correct
- * url to delegate
+ * This class manages the changing the of views. It determines the view
+ * requested and correct url to delegate
+ * 
  * @author Disa Mhembere
  * 
  */
 public class ViewManager implements ValueChangeHandler<String>
 {
 	private static ViewManager instance;
-	private static HashMap <ViewEnum, View> allViews = new HashMap<ViewEnum, View>(); // Map of all views & corresponding Enums
-	
+	private static HashMap<ViewEnum, View> allViews = new HashMap<ViewEnum, View>(); // Map
+																												// of
+																												// all
+																												// views
+																												// &
+																												// corresponding
+																												// Enums
+	private AuthServiceAsync authService = GWT.create(AuthService.class);
+	private boolean signedIn = false;
+
 	/**
-	 * Private constructor for singleton pattern
-	 * Register all views here which add each view to the
-	 *  <code>allViews</code> hashMap
+	 * Private constructor for singleton pattern Register all views here which
+	 * add each view to the <code>allViews</code> hashMap
 	 */
 	private ViewManager()
 	{
@@ -42,32 +54,36 @@ public class ViewManager implements ValueChangeHandler<String>
 		registerView(ViewEnum.AUTH, new AuthView());
 		registerView(ViewEnum.HOME, new HomeView());
 		registerView(ViewEnum.REGISTER, new RegisterView());
+		registerView(ViewEnum.SIGNOUT, new SignOutView());
 		History.addValueChangeHandler(this);
 	}
-	
-	
+
 	/**
-	 * Register a view with the manager i.e add it to the <code>allViews</code> hashMap 
-	 * @param vE the enum corresponding to the view <code>v</code>
-	 * @param v the view 
+	 * Register a view with the manager i.e add it to the <code>allViews</code>
+	 * hashMap
+	 * 
+	 * @param vE
+	 *           the enum corresponding to the view <code>v</code>
+	 * @param v
+	 *           the view
 	 */
-	private void registerView(ViewEnum vE, View v )
+	private void registerView(ViewEnum vE, View v)
 	{
 		allViews.put(vE, v);
 	}
-	
+
 	/**
-	 * Gives the singleton instance 
-	 * @return this instance of the view manager 
+	 * Gives the singleton instance
+	 * 
+	 * @return this instance of the view manager
 	 */
 	public static ViewManager getInstance()
 	{
 		if (instance != null)
 			return instance;
 		return instance = new ViewManager();
-			
+
 	}
-	
 
 	/**
 	 * Sets up start page and initializes the history
@@ -75,10 +91,9 @@ public class ViewManager implements ValueChangeHandler<String>
 	public void loadBaseView()
 	{
 		// Consistently loaded upon launch content
-		RootPanel.get("body").add(new HomeView()); 
-		RootPanel.get("history").add(new PersonalHistoryView()); 
-		
-		// AT : TODO
+		RootPanel.get("body").add(new HomeView());
+		RootPanel.get("history").add(new PersonalHistoryView()); // TODO AT: Figure out when to load this 
+
 
 		if (History.getToken().length() == 0)
 		{
@@ -86,17 +101,18 @@ public class ViewManager implements ValueChangeHandler<String>
 		}
 	}
 
-
 	/**
 	 * Sets the body of the website to a certain view
-	 * @param body enum corresponding to view in <code>allViews HashMap</code> 
+	 * 
+	 * @param body
+	 *           enum corresponding to view in <code>allViews HashMap</code>
 	 */
 	public void setBody(ViewEnum body)
 	{
 		View view;
 		try
 		{
-			view = allViews.get(body);  
+			view = allViews.get(body);
 		} catch (RuntimeException r)
 		{
 			throw new RuntimeException("Unknown view TODO: " + body.toString());
@@ -104,22 +120,57 @@ public class ViewManager implements ValueChangeHandler<String>
 
 		RootPanel.get("body").clear();
 		RootPanel.get("body").add(view);
+
 	}
 
 	/**
 	 * Processes the hyperlink clicks
-	 * @param event The event of the hyperlink click
+	 * 
+	 * @param event
+	 *           The event of the hyperlink click
 	 */
 	@Override
 	public void onValueChange(ValueChangeEvent<String> event)
 	{
-		 ViewEnum view = ViewEnum.HOME;
-		 try {
-		 view = ViewEnum.valueOf(event.getValue());
-		 } catch(IllegalArgumentException e) {
-		 return;
-		 }
+		ViewEnum view = ViewEnum.HOME;
+		try
+		{
+			view = ViewEnum.valueOf(event.getValue());
+		} catch (IllegalArgumentException e)
+		{
+			return;
+		}
 		setBody(view);
+	}
+
+	/**
+	 * Determine if a user is signed in or we are operating under a guest account
+	 * 
+	 * @return true if user is signed in else false
+	 */
+	@SuppressWarnings("unused")
+	private boolean isUserSignedIn()
+	{
+		authService.isSignedIn(new AsyncCallback<Boolean>()
+		{
+
+			@Override
+			public void onSuccess(Boolean result)
+			{
+				signedIn = result;
+			}
+
+			@Override
+			public void onFailure(Throwable caught)
+			{
+				signedIn = false;
+				// Log.debug("DM :Failure edu.jhu.twacker.client.HomeView.isUserSignedIn"
+				// + caught.getLocalizedMessage());
+			}
+
+		});
+
+		return signedIn;
 	}
 
 }

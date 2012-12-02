@@ -41,14 +41,14 @@ import edu.jhu.twacker.shared.FieldVerifier;
 public class HomeView extends View {
 
 	private final SearchServiceAsync queryService = GWT.create(SearchService.class);
+//	private final AuthServiceAsync authService = GWT.create(AuthService.class);
 
 	private VerticalPanel mainPanel;
 	private VerticalPanel histogramPanel = new VerticalPanel();
 	private VerticalPanel sentimentPanel = new VerticalPanel();
 	private TabPanel resultsTab = new TabPanel();
 	private Hyperlink signInUp;
-	//	private Hyperlink logOut;  // TODO : DM
-	//	private Label homeLabel;
+	private Hyperlink signOut;
 	private Label saveStatusLabel;
 
 	private VerticalPanel searchPanel = new VerticalPanel();
@@ -63,23 +63,23 @@ public class HomeView extends View {
 	private static DataTable table;
 	private static int count = 0;
 
-	//	private List<Search> searchTerms; // TODO : DM
-
 	/**
 	 * Default constructor assembles the visual portions of the view
 	 */
 	public HomeView() {
 
 		mainPanel = new VerticalPanel();
-		//		homeLabel = new Label("HOMEPAGE"); // To be moved to a static constantly loaded page
-		signInUp = new Hyperlink("Sign-in", "AUTH"); // To be moved to a static constantly loaded page
-		//logOut = new Hyperlink("Log out", "LOGOUT"); // To be moved to a static constantly loaded page
+		signInUp = new Hyperlink("Sign-in/Register", "AUTH"); 
+		signOut = new Hyperlink("Sign-out", "SIGNOUT"); 
 		saveStatusLabel = new Label();
-		saveStatusLabel.setVisible(false);
-
-		mainPanel.add(signInUp);
-		//mainPanel.add(logOut);		
-		//		mainPanel.add(homeLabel);
+		
+		HorizontalPanel signPanel = new HorizontalPanel();
+		signPanel.setSpacing(10);
+		signPanel.add(signInUp);
+		signPanel.add(new Label("  |  "));
+		signPanel.add(signOut);	
+		
+		mainPanel.add(signPanel);
 		
 		boxPanel.add(searchBox);
 		boxPanel.add(searchBox2);
@@ -246,7 +246,12 @@ public class HomeView extends View {
 			}
 				});
 	}
-
+	
+	/**
+	 * TODO : AL
+	 * @param result
+	 * @return
+	 */
 	private Options createOptions(String result) {
 		Options options = Options.create();
 		options.setWidth(400);
@@ -259,6 +264,11 @@ public class HomeView extends View {
 		return options;
 	}
 
+	/**
+	 * TODO : AL
+	 * @param result
+	 * @return
+	 */
 	private AbstractDataTable createPieChart(String result) {
 		String pie = result.substring(result.indexOf("sentiment"), result.indexOf("experts"));
 		String data = pie.substring(pie.indexOf("positive"), pie.indexOf("}"));
@@ -285,9 +295,5 @@ public class HomeView extends View {
 		}
 		return data2;
 	}
-	
-	
-
-
 }
 

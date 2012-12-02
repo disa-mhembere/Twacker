@@ -99,7 +99,7 @@ public class AuthView extends View
 			@Override
 			public void onClick(ClickEvent event)
 			{
-				authService.getUserName(new AsyncCallback<String>()
+				authService.getUsername(new AsyncCallback<String>()
 				{
 					@Override
 					public void onSuccess(String result)
@@ -201,7 +201,7 @@ public class AuthView extends View
 	{
 
 		// Confirm valid user name
-		if (!FieldVerifier.isValidUserName(username))
+		if (!FieldVerifier.isValidUsername(username))
 		{
 			infoLabel.setVisible(true);
 			if (username.length() < 3)

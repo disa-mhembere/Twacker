@@ -111,7 +111,6 @@ public class SearchServiceImpl extends RemoteServiceServlet implements
 		} catch (Exception e)
 		{
 			// DM OK to return empty hashMap
-			// result.put(new Date(), "No user entries for" + getUser());
 		}
 		return result;
 	}

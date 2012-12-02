@@ -58,7 +58,7 @@ public class RegisterServiceImpl extends RemoteServiceServlet implements Registe
 			{
 				pm.makePersistent(new Users(firstName, lastName, username, password,
 						email));
-				setUsername(username); // TODO
+				setUsername(username); 
 			} finally
 			{
 				pm.close();

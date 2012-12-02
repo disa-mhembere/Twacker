@@ -11,9 +11,14 @@ import java.io.Serializable;
  * @author Disa Mhembere
  *
  */
-@SuppressWarnings("serial")
+
 public class userExistsException extends Exception implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1242649012203763888L;
+
 	/**
 	 * Default constructor same as {@link Exception}
 	 */

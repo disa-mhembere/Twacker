@@ -41,7 +41,7 @@ public class Twacker implements EntryPoint
 				ViewManager.getInstance().loadBaseView();
 			    History.fireCurrentHistoryState();
 			    
-			    // Set the default user as guest from the start Temporary TODO: DM
+			    // Set the default user as guest from the start Temporary
 			    authService.setUsername("guest", new AsyncCallback<Void>()
 				{
 					@Override

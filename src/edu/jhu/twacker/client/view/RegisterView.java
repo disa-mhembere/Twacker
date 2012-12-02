@@ -154,10 +154,7 @@ public class RegisterView extends View
 					//Log.debug("DM: Failure!");
 				}
 			});
-		}
-		else
-			return;
-		
+		}	
 	}
 
 	/**
@@ -192,7 +189,7 @@ public class RegisterView extends View
 		}
 
 		// Confirm valid user name
-		if (!FieldVerifier.isValidUserName(username))
+		if (!FieldVerifier.isValidUsername(username))
 		{
 			infoLabel.setVisible(true);
 			if (username.length() < 3)
@@ -242,5 +239,18 @@ public class RegisterView extends View
 		return true;
 
 	}
+	
+	
+	/**
+	 * Used to return the value of the infoLabel
+	 * Mainly used for external testing
+	 * @return
+	 */
+	public String getInfoLabel()
+	{
+		return this.infoLabel.getText();
+		
+	}
+	
 
 }

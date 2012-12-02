@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import edu.jhu.twacker.client.service.AuthService;
 import edu.jhu.twacker.server.data.Users;
+import edu.jhu.twacker.shared.exceptions.NotSignedInException;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -33,27 +34,26 @@ public class AuthServiceImpl extends RemoteServiceServlet implements
 	 * @see edu.jhu.twacker.client.service.AuthService#signIn(java.lang.String)
 	 */
 	@Override
-	public String getUserName()
+	public String getUsername()
 	{
 		HttpSession httpSession = getThreadLocalRequest().getSession(true);
 
-//		if (httpSession.getAttribute("username") == null)
-//		{
-//			setUsername("guest");
-//			return getUserName(); // Default user when a user decides to not log in
-//		}
+		if (httpSession.getAttribute("username") == null)
+		{
+			setUsername("guest");
+			return getUsername(); // Default user when a user decides to not log in
+		}
 		return httpSession.getAttribute("username").toString();
 	}
 
 	@Override
 	/**
-	 * 
+	 * Determines if a user is signed in or not
 	 * @see edu.jhu.twacker.client.service.AuthService#isSignedIn()
 	 */
 	public boolean isSignedIn()
 	{
-		// TODO DM Auto-generated method stub
-		return false;
+		return !getUsername().toString().equals("guest");
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class AuthServiceImpl extends RemoteServiceServlet implements
 	 */
 	public String signIn(String username, String password)
 	{
-		PersistenceManager pm = PMF.getPersistenceManager(); // TODO: PersistenceManager pm = PMF.getPersistenceManager("transactions-optional");
+		PersistenceManager pm = PMF.getPersistenceManager(); 
 		Query q = pm.newQuery(Users.class);
 		q.setFilter("username == usernameParam && password == passwordParam");
 
@@ -76,27 +76,24 @@ public class AuthServiceImpl extends RemoteServiceServlet implements
 			if (authenticatedUser.size() > 0) // This guy is in the DB
 			{
 				setUsername(username); // Set session username
-				return getUserName(); // Return session username
+				return getUsername(); // Return session username
 			}
 		} finally
 		{
 			pm.close();
 		}
-
-		// If all that fails then blow up for now // TODO DM: Add
-		// AuthFailureException
 		return null;
 	}
 
 	/**
-	 * 
+	 * Signs a user out i.e sets the username to "guest" again
 	 * @see edu.jhu.twacker.client.service.AuthService#signOut()
 	 */
 	@Override
-	public String signOut()
+	public String signOut() throws NotSignedInException
 	{
-		// TODO DM Auto-generated method stub
-		return null;
+		setUsername("guest");
+		return getUsername();
 	}
 
 	/**

@@ -1,6 +1,6 @@
 /**
  * OOSE Project - Group 4
- * {@link FieldVerifier2}.java
+ * {@link FieldVerifier}.java
  */
 package edu.jhu.twacker.shared;
 
@@ -24,7 +24,7 @@ public class FieldVerifier
 	 */
 	public static boolean isValidEmail(String emailAdd)
 	{
-		RegExp p = RegExp.compile(".+@.+\\..+");
+		RegExp p = RegExp.compile("^[a-zA-Z0-9]+@.+\\..[a-zA-Z]+$");
 		return p.test(emailAdd);
 	}
 
@@ -33,7 +33,7 @@ public class FieldVerifier
 	 * @param name the name of user
 	 * @return true if valid else false
 	 */
-	public static boolean isValidUserName(String name)
+	public static boolean isValidUsername(String name)
 	{
 
 		RegExp p = RegExp.compile("[^a-zA-Z0-9]"); // No special Characters
@@ -65,9 +65,8 @@ public class FieldVerifier
 	 */
 	public static boolean isValidName(String name)
 	{
-		RegExp p = RegExp.compile("^[A-Z][a-z]"); // No special Characters (^([A-Z])[a-z]*)|([a-z]+)
-		return p.test(name);
-		
+		RegExp p = RegExp.compile("^[A-Z][a-z]{1,30}$"); // No special Characters (^([A-Z])[a-z]*)|([a-z]+)
+		return p.test(name);	
 	}
 	
 	/**

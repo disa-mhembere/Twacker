@@ -15,7 +15,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-//import com.google.gwt.i18n.shared.DateTimeFormat;
+import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -49,7 +49,7 @@ public class PersonalHistoryView extends View
 	private Date singleSearchDate = new Date(System.currentTimeMillis());
 	private Label searchLabel = new Label("");
 
-//	private DateTimeFormat dateFormat = DateTimeFormat.getFormat("EEEE, MMMM d, yyyy");
+	private DateTimeFormat dateFormat = DateTimeFormat.getFormat("EEEE, MMMM d, yyyy");
 
 	/**
 	 * Default constructor initializes the visual/GUI aspects of
@@ -152,7 +152,8 @@ public class PersonalHistoryView extends View
 				{
 					s = "No History!";
 				}
-				searchLabel.setText("All Searches:" + s);				
+				searchLabel.setText(dateFormat.format(getSingleSearchDate())
+						+ " Searches: " + s);				
 			}
 			
 			@Override
@@ -161,38 +162,6 @@ public class PersonalHistoryView extends View
 				Log.debug("DM getAllSearches onFailure: " + caught.getMessage()); // Debug
 			}
 		});
-		
-		
-		
-//		historyService.getDaySearches(getSingleSearchDate(),
-//				new AsyncCallback<Map<Date, String>>()
-//				{
-//					@Override
-//					public void onSuccess(Map<Date, String> result)
-//					{
-//						String s = "";
-//						for (String st : result.values())
-//						{
-//							s += st + ", ";
-//						}
-//
-//						if (s == "")
-//						{
-//							s = "No searches for current day";
-//						}
-//
-//						searchLabel.setText(dateFormat.format(getSingleSearchDate())
-//								+ " Searches: " + s);
-//					}
-//
-//					@Override
-//					public void onFailure(Throwable caught)
-//					{
-//						// searchLabel.setText("Please select a date!");
-//						Log.debug("DM getDaySearches onFailure: "
-//								+ caught.getLocalizedMessage());
-//					}
-//				});
 		return singleDaySearchesMap;
 	}
 
@@ -234,35 +203,6 @@ public class PersonalHistoryView extends View
 			}
 		});
 		
-		
-//		historyService.getAllSearches(new AsyncCallback<Map<Date, String>>()
-//		{
-//
-//			@Override
-//			public void onSuccess(Map<Date, String> result)
-//			{
-//				String s = "";
-//				for (String st : result.values())
-//				{
-//					s += st + ", ";
-//				}
-//
-//				if (s == "")
-//				{
-//					s = "No History!";
-//				}
-//				searchLabel.setText("All Searches:" + s);
-//				// Log.debug(historyService + "s value: " + s);
-//			}
-//
-//			@Override
-//			public void onFailure(Throwable caught)
-//			{
-//				Log.debug("DM getAllSearches onFailure: " + caught.getMessage()); // Debug
-//																										// mode
-//			}
-//		});
-
 		return allSearchesMap;
 	}
 

@@ -8,6 +8,8 @@ package edu.jhu.twacker.client.service;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
+import edu.jhu.twacker.shared.exceptions.NotSignedInException;
+
 
 /**
  * Web service which implements an authentication interface & sign-in
@@ -21,9 +23,9 @@ public interface AuthService extends RemoteService
 	/**
 	 * Get the username of the user signed in based on httpsession data
 	 * if not signed in return "guest"
-	 * @return
+	 * @return the username of user else "guest" if not signed in
 	 */
-	public String getUserName();
+	public String getUsername();
 	
 	/**
 	 * Determine if the user is signed in
@@ -42,8 +44,9 @@ public interface AuthService extends RemoteService
 	/**
 	 * Sign out of the web application & disable all personal aspects of the site
 	 * @return sanity check to ensure "guest" is returned
+	 * @throws NotSignedInException exception thrown if user requests sign out when not signed in
 	 */
-	public String signOut();
+	public String signOut() throws NotSignedInException;
 	
 	
 	/**
