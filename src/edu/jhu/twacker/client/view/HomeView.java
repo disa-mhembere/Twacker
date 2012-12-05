@@ -46,6 +46,7 @@ public class HomeView extends View {
 	// private final AuthServiceAsync authService =
 	// GWT.create(AuthService.class);
 
+	
 	private VerticalPanel mainPanel = new VerticalPanel();
 	private VerticalPanel histogramPanel = new VerticalPanel();
 	private VerticalPanel sentimentPanel = new VerticalPanel();
@@ -53,8 +54,13 @@ public class HomeView extends View {
 	private Hyperlink signInUp;
 	private Hyperlink signOut;
 	private Label saveStatusLabel = new Label();
-	private Label titleLabel = new Label();
 
+	//TODO AT
+	private Label titleLabel = new Label();
+	private HorizontalPanel superPanel = new HorizontalPanel();
+	private VerticalPanel leftSidePanel = new VerticalPanel();
+	private VerticalPanel rightSidePanel = new VerticalPanel();
+	
 	private VerticalPanel searchPanel = new VerticalPanel();
 	private HorizontalPanel boxPanel = new HorizontalPanel();
 	private TextBox searchBox = new TextBox();
@@ -68,9 +74,19 @@ public class HomeView extends View {
 	private static int count = 0;
 
 	/**
-	 * Default constructor assembles the visual portions of the view
+	 *  Constructor initializes all components of the view
 	 */
 	public HomeView() {
+		//Initialize title label, add to RSP
+		titleLabel.setText("Twacker");
+		titleLabel.setHeight("100px");
+		titleLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		
+		rightSidePanel.add(titleLabel);
+		rightSidePanel.setWidth("700px");
+		rightSidePanel.setBorderWidth(1);
+		
+		//SignInUp/Out initialize
 		signInUp = new Hyperlink("Sign-in/Register", "AUTH"); 
 		signOut = new Hyperlink("Sign-out", "SIGNOUT"); 
 		
@@ -80,7 +96,10 @@ public class HomeView extends View {
 		signPanel.add(new Label("  |  "));
 		signPanel.add(signOut);	
 		
-		mainPanel.add(signPanel);
+//		mainPanel.add(signPanel);
+		leftSidePanel.add(signPanel);
+		leftSidePanel.setWidth("200px");
+		
 		
 		boxPanel.add(searchBox);
 		boxPanel.add(searchBox2);
@@ -88,6 +107,7 @@ public class HomeView extends View {
 		searchPanel.add(boxPanel);
 		searchPanel.add(searchButton);
 	    searchPanel.setCellHorizontalAlignment(searchButton, HasHorizontalAlignment.ALIGN_RIGHT);
+//	    searchPanel.setWidth("700px");
 	    
 	    searchBox.setFocus(true);
 		searchBox.setText(FieldVerifier.PRIMARY_DEFAULT);
@@ -95,16 +115,21 @@ public class HomeView extends View {
 		searchBox3.setText(FieldVerifier.SECONDARY_DEFAULT);
 		searchBox.selectAll();
 		
-		mainPanel.add(searchPanel);
-		mainPanel.add(infoLabel);
-		mainPanel.add(saveStatusLabel);
+//		mainPanel.add(searchPanel);
+//		mainPanel.add(infoLabel);
+//		mainPanel.add(saveStatusLabel);
+		
 		
 		resultsTab.add(histogramPanel, "Histogram");
 		resultsTab.add(sentimentPanel, "Sentiment");
 		resultsTab.setVisible(false);
-		mainPanel.add(resultsTab);
-
-		initWidget(mainPanel);		
+//		mainPanel.add(resultsTab);
+		
+		rightSidePanel.add(searchPanel);
+		rightSidePanel.add(infoLabel);
+		rightSidePanel.add(saveStatusLabel);
+		rightSidePanel.add(resultsTab);
+		
 
 		// Create a handler for the sendButton and nameField
 		class SearchButtonHandler implements ClickHandler, KeyUpHandler {
@@ -203,6 +228,14 @@ public class HomeView extends View {
 		searchBox.addKeyUpHandler(handler);
 		searchBox2.addKeyUpHandler(handler);
 		searchBox3.addKeyUpHandler(handler);
+		
+		superPanel.add(leftSidePanel);
+		superPanel.add(rightSidePanel);
+		superPanel.setBorderWidth(2);
+//		superPanel.setWidth("900px");
+		
+//		initWidget(mainPanel);
+		initWidget(superPanel);
 	}
 
 	public static void updateTable(String s) {

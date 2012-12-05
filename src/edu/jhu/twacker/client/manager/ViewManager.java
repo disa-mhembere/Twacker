@@ -126,8 +126,8 @@ public class ViewManager implements ValueChangeHandler<String>
 
 		RootPanel.get("body").clear();
 		RootPanel.get("body").add(view);
-		RootPanel.get("history").clear();
 		if (isUserSignedIn()){
+			RootPanel.get("history").clear();
 			RootPanel.get("history").add(new PersonalHistoryView());	
 		}
 
