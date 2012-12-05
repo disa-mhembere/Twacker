@@ -92,7 +92,13 @@ public class ViewManager implements ValueChangeHandler<String>
 	{
 		// Consistently loaded upon launch content
 		RootPanel.get("body").add(new HomeView());
-		RootPanel.get("history").add(new PersonalHistoryView()); // TODO AT: Figure out when to load this 
+		
+		// Only load this panel if user is signed in
+		if (isUserSignedIn()){
+			RootPanel.get("history").add(new PersonalHistoryView());	
+		}
+		 
+		// TODO AT: Figure out when to load this 
 
 
 		if (History.getToken().length() == 0)
@@ -120,6 +126,10 @@ public class ViewManager implements ValueChangeHandler<String>
 
 		RootPanel.get("body").clear();
 		RootPanel.get("body").add(view);
+		RootPanel.get("history").clear();
+		if (isUserSignedIn()){
+			RootPanel.get("history").add(new PersonalHistoryView());	
+		}
 
 	}
 

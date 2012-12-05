@@ -35,31 +35,35 @@ import edu.jhu.twacker.shared.FieldVerifier;
 
 /**
  * The Home view
+ * 
  * @author Disa Mhembere, Alex Long, Andy Tien
- *
+ * 
  */
 public class HomeView extends View {
 
-	private final SearchServiceAsync queryService = GWT.create(SearchService.class);
-//	private final AuthServiceAsync authService = GWT.create(AuthService.class);
+	private final SearchServiceAsync queryService = GWT
+			.create(SearchService.class);
+	// private final AuthServiceAsync authService =
+	// GWT.create(AuthService.class);
 
-	private VerticalPanel mainPanel;
+	private VerticalPanel mainPanel = new VerticalPanel();
 	private VerticalPanel histogramPanel = new VerticalPanel();
 	private VerticalPanel sentimentPanel = new VerticalPanel();
 	private TabPanel resultsTab = new TabPanel();
 	private Hyperlink signInUp;
 	private Hyperlink signOut;
-	private Label saveStatusLabel;
+	private Label saveStatusLabel = new Label();
+	private Label titleLabel = new Label();
 
 	private VerticalPanel searchPanel = new VerticalPanel();
 	private HorizontalPanel boxPanel = new HorizontalPanel();
 	private TextBox searchBox = new TextBox();
 	private TextBox searchBox2 = new TextBox();
-	private TextBox searchBox3 = new TextBox();		
+	private TextBox searchBox3 = new TextBox();
 	private Button searchButton = new Button("Search");
-	
+
 	private Label infoLabel = new Label();
-	
+
 	private static DataTable table;
 	private static int count = 0;
 
@@ -67,11 +71,8 @@ public class HomeView extends View {
 	 * Default constructor assembles the visual portions of the view
 	 */
 	public HomeView() {
-
-		mainPanel = new VerticalPanel();
 		signInUp = new Hyperlink("Sign-in/Register", "AUTH"); 
 		signOut = new Hyperlink("Sign-out", "SIGNOUT"); 
-		saveStatusLabel = new Label();
 		
 		HorizontalPanel signPanel = new HorizontalPanel();
 		signPanel.setSpacing(10);
@@ -203,52 +204,55 @@ public class HomeView extends View {
 		searchBox2.addKeyUpHandler(handler);
 		searchBox3.addKeyUpHandler(handler);
 	}
-	
+
 	public static void updateTable(String s) {
-		String histogram = s.substring(s.indexOf("histogram"), s.indexOf("sentiment"));
-		String data = histogram.substring(histogram.indexOf("data"), histogram.indexOf("]"));
+		String histogram = s.substring(s.indexOf("histogram"),
+				s.indexOf("sentiment"));
+		String data = histogram.substring(histogram.indexOf("data"),
+				histogram.indexOf("]"));
 		String[] days = data.split(",");
 		int[] counts = new int[days.length];
 		for (int i = 0; i < days.length; i++) {
 			counts[i] = Integer.parseInt(days[i].replaceAll("\\D", ""));
 		}
-		table.addColumn(ColumnType.NUMBER, s.substring(s.indexOf(": \""), s.indexOf("\",")));
+		table.addColumn(ColumnType.NUMBER,
+				s.substring(s.indexOf(": \""), s.indexOf("\",")));
 
 		for (int i = 0; i < counts.length; i++) {
 			if (count == 0)
 				table.setValue(i, 0, i);
-			table.setValue(i, count+1, counts[i]);
+			table.setValue(i, count + 1, counts[i]);
 		}
 		count++;
 	}
-	
+
 	/**
-	 * Save search Terms(s) provided to users profile for {@link PersonalHistoryView}
+	 * Save search Terms(s) provided to users profile for
+	 * {@link PersonalHistoryView}
+	 * 
 	 * @param searchTerm
 	 */
-	private void saveSearchTerm(final String searchTerm)
-	{
+	private void saveSearchTerm(final String searchTerm) {
 		saveStatusLabel.setVisible(false);
-		queryService.saveSearch(searchTerm, new AsyncCallback<Void>()
-				{
+		queryService.saveSearch(searchTerm, new AsyncCallback<Void>() {
 			@Override
-			public void onSuccess(Void result)
-			{
+			public void onSuccess(Void result) {
 				saveStatusLabel.setVisible(true);
 				saveStatusLabel.setText("Search term(s) saved!");
 			}
 
 			@Override
-			public void onFailure(Throwable caught)
-			{
+			public void onFailure(Throwable caught) {
 				saveStatusLabel.setVisible(true);
-				saveStatusLabel.setText("Search term(s) unsucessful! " + caught.getMessage());	
+				saveStatusLabel.setText("Search term(s) unsucessful! "
+						+ caught.getMessage());
 			}
-				});
+		});
 	}
-	
+
 	/**
 	 * TODO : AL
+	 * 
 	 * @param result
 	 * @return
 	 */
@@ -256,7 +260,9 @@ public class HomeView extends View {
 		Options options = Options.create();
 		options.setWidth(400);
 		options.setHeight(300);
-		options.setTitle("Twacker Results for " + result.substring(result.indexOf(": \""), result.indexOf("\",")));
+		options.setTitle("Twacker Results for "
+				+ result.substring(result.indexOf(": \""),
+						result.indexOf("\",")));
 		options.setPointSize(5);
 		AxisOptions opt = AxisOptions.create();
 		opt.set("viewWindowMode", "pretty");
@@ -266,11 +272,13 @@ public class HomeView extends View {
 
 	/**
 	 * TODO : AL
+	 * 
 	 * @param result
 	 * @return
 	 */
 	private AbstractDataTable createPieChart(String result) {
-		String pie = result.substring(result.indexOf("sentiment"), result.indexOf("experts"));
+		String pie = result.substring(result.indexOf("sentiment"),
+				result.indexOf("experts"));
 		String data = pie.substring(pie.indexOf("positive"), pie.indexOf("}"));
 		String[] days = data.split(",");
 		int[] counts = new int[days.length];
@@ -290,10 +298,9 @@ public class HomeView extends View {
 		for (int i = 0; i < counts.length; i++) {
 			if (i != 4)
 				data2.setValue(i, 1, counts[i]);
-			else 
+			else
 				data2.setValue(3, 1, counts[4]);
 		}
 		return data2;
 	}
 }
-
