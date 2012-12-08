@@ -5,15 +5,30 @@
 package edu.jhu.twacker.model.query;
 
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.util.EntityUtils;
 
 import com.google.gson.Gson;
 
 import edu.jhu.twacker.model.query.alchemy.AlchemyReponseWrapper;
 import edu.jhu.twacker.model.query.alchemy.AlchemyResponse;
+import edu.jhu.twacker.model.query.sentiment140.Sentiment140Response;
 import edu.jhu.twacker.model.query.twitter.SearchTerm;
 import edu.jhu.twacker.model.query.twitter.tweet.Tweet;
 
@@ -82,11 +97,29 @@ public class SentimentExec extends QueryExec
 //		analyzeTweets(getTweets());
 //		this.response = new AlchemyReponseWrapper(this.positive, this.negative, this.neutral, this.errors);
 		
-		Random random = new Random();
-		this.positive = random.nextInt(100);
-		this.negative = random.nextInt(100);
-		this.neutral = random.nextInt(20);
-		this.errors = random.nextInt(10);
+//		Random random = new Random();
+//		this.positive = random.nextInt(100);
+//		this.negative = random.nextInt(100);
+//		this.neutral = random.nextInt(20);
+//		this.errors = random.nextInt(10);
+		
+		try 
+		{
+			Sentiment140Response response = sentiment140Analysis(getTweets());
+			this.positive = response.positive();
+			this.negative = response.negative();
+			this.neutral = response.neutral();
+			
+			System.out.println(toString());
+		}
+		catch (ClientProtocolException e) 
+		{
+			e.printStackTrace();
+		}
+		catch (IOException e) 
+		{
+			e.printStackTrace();
+		}
 		
 		this.response = new AlchemyReponseWrapper(this.positive, this.negative, this.neutral, this.errors);
 	}
@@ -185,6 +218,54 @@ public class SentimentExec extends QueryExec
 			return -1;
 	}
 	
+	private Sentiment140Response sentiment140Analysis(List<String> tweets) throws ClientProtocolException, IOException
+	{	
+		List<String> newTweets = new ArrayList<String>();
+		for (String tweet : tweets)
+		{
+			// would not let me do tweet = tweet.replace() for some reason?
+			String newTweet = tweet.replace("\"", " ");
+			newTweets.add(newTweet);
+		}
+		tweets = newTweets;
+		
+		String body = this.packageTweets(tweets);
+		
+		// form the connection
+		// comment this section out if running locally
+		HttpParams httpParams = new BasicHttpParams();
+		ClientConnectionManager connectionManager = new GAEConnectionManager();
+		HttpClient client = new DefaultHttpClient(connectionManager, httpParams);
+				
+		// uncomment this section if running locally
+//		HttpClient client = new DefaultHttpClient();
+		
+		HttpPost post = new HttpPost("http://www.sentiment140.com/api/bulkClassifyJson");
+		
+		// add the Tweets to the body
+		StringEntity se = new StringEntity(body);
+		post.setEntity(se);
+		
+		// get the response
+		HttpResponse response = client.execute(post);		
+
+		Gson gson = new Gson();
+		return gson.fromJson(EntityUtils.toString(response.getEntity()), Sentiment140Response.class);
+	}
+	
+	private String packageTweets(List<String> tweets)
+	{
+		String json = "{\"data\": [";
+		for (String tweet : tweets)
+		{
+			json = json + "{\"text\": \"" + tweet + "\", \"query\": \"" + this.search + "\"},";
+		}
+		json = json.substring(0, json.length() - 1);
+		json = json + "]}";
+		
+		return json;
+	}
+	
 	/**
 	 * Performs the analysis with the Alchemy API. 
 	 * @param tweets The String to analyze.
@@ -222,9 +303,10 @@ public class SentimentExec extends QueryExec
 	
 	/**
 	 * Tests the <code>SentimentExec</code> class.
+	 * @throws UnsupportedEncodingException 
 	 */
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) throws Exception
+	{	
 		SentimentExec sentiment = new SentimentExec("Obama");
 		sentiment.run();
 		
