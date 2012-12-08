@@ -78,7 +78,7 @@ public class TwackerModel
 			executer.run();
 		
 		this.createJsonFormat();
-		this.result = new Result(this.histogram.getResults(), this.experts.getResults(), this.sentiment.getResults());
+		this.result = new Result(this.search, this.histogram.getResults(), this.experts.getResults(), this.sentiment.getResults());
 	}
 	
 	/**
