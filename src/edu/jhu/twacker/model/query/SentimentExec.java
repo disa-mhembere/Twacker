@@ -15,7 +15,6 @@ import java.util.List;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.entity.StringEntity;
@@ -296,8 +295,8 @@ public class SentimentExec extends QueryExec
 	 */
 	public String toString()
 	{
-		return "\"sentiment\": { \"positive\" : \"" + this.positive + "\", \"neutral\" : \"" + this.neutral +
-				"\", \"negative\" : \"" + this.negative + "\", \"total\" : \"" + this.total + "\", " +
+		return "\"sentiment\": { \"positive\" : \"" + this.positive + "\", \"negative\" : \"" + this.negative +
+				"\", \"neutral\" : \"" + this.neutral + "\", \"total\" : \"" + this.total + "\", " +
 				"\"errors\": \"" + this.errors + "\" }";
 	}
 	
