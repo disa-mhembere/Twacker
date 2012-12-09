@@ -18,17 +18,11 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.visualization.client.AbstractDataTable;
-import com.google.gwt.visualization.client.AbstractDataTable.ColumnType;
-import com.google.gwt.visualization.client.DataTable;
-import com.google.gwt.visualization.client.visualizations.corechart.AxisOptions;
-import com.google.gwt.visualization.client.visualizations.corechart.LineChart;
-import com.google.gwt.visualization.client.visualizations.corechart.Options;
-import com.google.gwt.visualization.client.visualizations.corechart.PieChart;
-
+import edu.jhu.twacker.client.manager.ChartManager;
 import edu.jhu.twacker.client.service.SearchService;
 import edu.jhu.twacker.client.service.SearchServiceAsync;
 import edu.jhu.twacker.shared.FieldVerifier;
@@ -46,10 +40,9 @@ public class HomeView extends View {
 	// private final AuthServiceAsync authService =
 	// GWT.create(AuthService.class);
 
-	
-	private VerticalPanel mainPanel = new VerticalPanel();
 	private VerticalPanel histogramPanel = new VerticalPanel();
 	private VerticalPanel sentimentPanel = new VerticalPanel();
+	private StackPanel expertsPanel = new StackPanel();
 	private TabPanel resultsTab = new TabPanel();
 	private Hyperlink signInUp;
 	private Hyperlink signOut;
@@ -69,10 +62,7 @@ public class HomeView extends View {
 	private Button searchButton = new Button("Search");
 
 	private Label infoLabel = new Label();
-
-	private static DataTable table;
-	private static int count = 0;
-
+	
 	/**
 	 *  Constructor initializes all components of the view
 	 */
@@ -122,6 +112,7 @@ public class HomeView extends View {
 		
 		resultsTab.add(histogramPanel, "Histogram");
 		resultsTab.add(sentimentPanel, "Sentiment");
+		resultsTab.add(expertsPanel, "Experts");
 		resultsTab.setVisible(false);
 //		mainPanel.add(resultsTab);
 		
@@ -164,24 +155,7 @@ public class HomeView extends View {
 			 */
 			public void onKeyUp(KeyUpEvent event) {
 				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-					if (!FieldVerifier.isValidSearch(searchBox.getText())) {
-						infoLabel.setText("Invalid Required Field");
-						return;
-					}
-					else {
-						searchTerms = new LinkedList<String>();
-						saveSearchTerm(searchBox.getText());
-						searchTerms.add(searchBox.getText());
-						if (FieldVerifier.isValidSearch(searchBox2.getText())) {
-							searchTerms.add(searchBox2.getText());
-							saveSearchTerm(searchBox2.getText());
-						}
-						if (FieldVerifier.isValidSearch(searchBox3.getText())) {
-							searchTerms.add(searchBox3.getText());
-							saveSearchTerm(searchBox3.getText());
-						}
-						sendQueryToServer(searchTerms);
-					}
+					onClick(null);
 				}
 			}
 
@@ -192,10 +166,7 @@ public class HomeView extends View {
 			private void sendQueryToServer(final LinkedList<String> searchTerms) {
 				infoLabel.setText("Gathering Data!");				
 				
-				table = DataTable.create();
-				table.addColumn(ColumnType.NUMBER, "Day");
-				table.addRows(10);
-				count = 0;
+				ChartManager.initDataTable();
 				
 				for (String s : searchTerms) {
 					queryService.queryServer(s, new AsyncCallback<String>() {
@@ -204,15 +175,17 @@ public class HomeView extends View {
 
 						public void onSuccess(String result) {
 							infoLabel.setText("");
-							if (count == 0 ) {
+							if (ChartManager.getCount() == 0 ) {
 								sentimentPanel.clear();
 								histogramPanel.clear();
+								expertsPanel.clear();
 							}
 							
-							updateTable(result);
-							sentimentPanel.add(new PieChart(createPieChart(result), createOptions(result)));
-							if (count == searchTerms.size()) { 
-								histogramPanel.add(new LineChart(table, createOptions(result)));
+							ChartManager.updateTable(result);
+							sentimentPanel.add(ChartManager.createPieChart(result));
+							expertsPanel.add(ChartManager.createExpertsPanel(result), result.substring(result.indexOf(": \"")+3, result.indexOf("\",")));
+							if (ChartManager.getCount() == searchTerms.size()) { 
+								histogramPanel.add(ChartManager.createLineChart(result));
 								resultsTab.setVisible(true);
 								resultsTab.selectTab(0);								
 							}
@@ -238,27 +211,6 @@ public class HomeView extends View {
 		initWidget(superPanel);
 	}
 
-	public static void updateTable(String s) {
-		String histogram = s.substring(s.indexOf("histogram"),
-				s.indexOf("sentiment"));
-		String data = histogram.substring(histogram.indexOf("data"),
-				histogram.indexOf("]"));
-		String[] days = data.split(",");
-		int[] counts = new int[days.length];
-		for (int i = 0; i < days.length; i++) {
-			counts[i] = Integer.parseInt(days[i].replaceAll("\\D", ""));
-		}
-		table.addColumn(ColumnType.NUMBER,
-				s.substring(s.indexOf(": \""), s.indexOf("\",")));
-
-		for (int i = 0; i < counts.length; i++) {
-			if (count == 0)
-				table.setValue(i, 0, i);
-			table.setValue(i, count + 1, counts[i]);
-		}
-		count++;
-	}
-
 	/**
 	 * Save search Terms(s) provided to users profile for
 	 * {@link PersonalHistoryView}
@@ -281,59 +233,5 @@ public class HomeView extends View {
 						+ caught.getMessage());
 			}
 		});
-	}
-
-	/**
-	 * TODO : AL
-	 * 
-	 * @param result
-	 * @return
-	 */
-	private Options createOptions(String result) {
-		Options options = Options.create();
-		options.setWidth(400);
-		options.setHeight(300);
-		options.setTitle("Twacker Results for "
-				+ result.substring(result.indexOf(": \""),
-						result.indexOf("\",")));
-		options.setPointSize(5);
-		AxisOptions opt = AxisOptions.create();
-		opt.set("viewWindowMode", "pretty");
-		options.setHAxisOptions(opt);
-		return options;
-	}
-
-	/**
-	 * TODO : AL
-	 * 
-	 * @param result
-	 * @return
-	 */
-	private AbstractDataTable createPieChart(String result) {
-		String pie = result.substring(result.indexOf("sentiment"),
-				result.indexOf("experts"));
-		String data = pie.substring(pie.indexOf("positive"), pie.indexOf("}"));
-		String[] days = data.split(",");
-		int[] counts = new int[days.length];
-		for (int i = 0; i < days.length; i++) {
-			counts[i] = Integer.parseInt(days[i].replaceAll("\\D", ""));
-		}
-
-		DataTable data2 = DataTable.create();
-		data2.addColumn(ColumnType.STRING, "Sentiment");
-		data2.addColumn(ColumnType.NUMBER, "Number");
-		data2.addRows(4);
-		data2.setValue(0, 0, "Positive");
-		data2.setValue(1, 0, "Negative");
-		data2.setValue(2, 0, "Neutral");
-		data2.setValue(3, 0, "ERROR");
-
-		for (int i = 0; i < counts.length; i++) {
-			if (i != 4)
-				data2.setValue(i, 1, counts[i]);
-			else
-				data2.setValue(3, 1, counts[4]);
-		}
-		return data2;
 	}
 }
