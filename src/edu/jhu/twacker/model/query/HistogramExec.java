@@ -101,7 +101,7 @@ public class HistogramExec extends QueryExec
 	 */
 	public static void main(String[] args)
 	{
-		HistogramExec histogram = new HistogramExec("Obama", "86400", "10");
+		HistogramExec histogram = new HistogramExec("Obama", "86400", "30");
 		histogram.run();
 		
 		System.out.println(histogram);

@@ -65,7 +65,7 @@ public class ChartManager {
 	public static void initDataTable() {
 		table = DataTable.create();
 		table.addColumn(ColumnType.NUMBER, "Day");
-		table.addRows(10);
+		table.addRows(30);
 		count = 0;
 	}	
 	
