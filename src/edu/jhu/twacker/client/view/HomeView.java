@@ -47,6 +47,8 @@ public class HomeView extends View {
 	private Hyperlink signInUp;
 	private Hyperlink signOut;
 	private Label saveStatusLabel = new Label();
+	
+	private HorizontalPanel signPanel = new HorizontalPanel();
 
 	//TODO AT
 	private Label titleLabel = new Label();
@@ -77,10 +79,9 @@ public class HomeView extends View {
 		rightSidePanel.setBorderWidth(1);
 		
 		//SignInUp/Out initialize
-		signInUp = new Hyperlink("Sign-in/Register", "AUTH"); 
+		signInUp = new Hyperlink("Sign-in", "AUTH"); 
 		signOut = new Hyperlink("Sign-out", "SIGNOUT"); 
 		
-		HorizontalPanel signPanel = new HorizontalPanel();
 		signPanel.setSpacing(10);
 		signPanel.add(signInUp);
 		signPanel.add(new Label("  |  "));
@@ -130,6 +131,7 @@ public class HomeView extends View {
 			 * Fired when the user clicks on the sendButton.
 			 */
 			public void onClick(ClickEvent event) {
+				
 				if (!FieldVerifier.isValidSearch(searchBox.getText())) {
 					infoLabel.setText("Invalid Required Field");
 					return;
@@ -204,7 +206,7 @@ public class HomeView extends View {
 		
 		superPanel.add(leftSidePanel);
 		superPanel.add(rightSidePanel);
-		superPanel.setBorderWidth(2);
+		superPanel.setBorderWidth(4);
 //		superPanel.setWidth("900px");
 		
 //		initWidget(mainPanel);

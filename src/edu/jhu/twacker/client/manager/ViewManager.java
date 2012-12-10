@@ -34,13 +34,8 @@ import edu.jhu.twacker.client.view.ViewEnum;
 public class ViewManager implements ValueChangeHandler<String>
 {
 	private static ViewManager instance;
-	private static HashMap<ViewEnum, View> allViews = new HashMap<ViewEnum, View>(); // Map
-																												// of
-																												// all
-																												// views
-																												// &
-																												// corresponding
-																												// Enums
+	private static HashMap<ViewEnum, View> allViews = new HashMap<ViewEnum, View>(); 
+	// Map of all views & corresponding Enums
 	private AuthServiceAsync authService = GWT.create(AuthService.class);
 	private boolean signedIn = false;
 
@@ -155,7 +150,6 @@ public class ViewManager implements ValueChangeHandler<String>
 
 	/**
 	 * Determine if a user is signed in or we are operating under a guest account
-	 * 
 	 * @return true if user is signed in else false
 	 */
 	@SuppressWarnings("unused")
