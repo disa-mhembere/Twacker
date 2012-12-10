@@ -7,6 +7,7 @@ package edu.jhu.twacker.client.view;
 import java.util.LinkedList;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -17,6 +18,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.TabPanel;
@@ -35,11 +37,15 @@ import edu.jhu.twacker.shared.FieldVerifier;
  */
 public class HomeView extends View {
 
+	private final String logoURL= "http://www.ugrad.cs.jhu.edu/~group4/final/twacker.png";
 	private final SearchServiceAsync queryService = GWT
 			.create(SearchService.class);
-	// private final AuthServiceAsync authService =
-	// GWT.create(AuthService.class);
+//	private final AuthServiceAsync authService = GWT.create(AuthService.class);
 
+	//private boolean isSignedIn = false;
+	
+	private Image logoImage = new Image(logoURL);
+	
 	private VerticalPanel histogramPanel = new VerticalPanel();
 	private VerticalPanel sentimentPanel = new VerticalPanel();
 	private StackPanel expertsPanel = new StackPanel();
@@ -51,7 +57,7 @@ public class HomeView extends View {
 	private HorizontalPanel signPanel = new HorizontalPanel();
 
 	//TODO AT
-	private Label titleLabel = new Label();
+//	private Label titleLabel = new Label();
 	private HorizontalPanel superPanel = new HorizontalPanel();
 	private VerticalPanel leftSidePanel = new VerticalPanel();
 	private VerticalPanel rightSidePanel = new VerticalPanel();
@@ -69,12 +75,16 @@ public class HomeView extends View {
 	 *  Constructor initializes all components of the view
 	 */
 	public HomeView() {
-		//Initialize title label, add to RSP
-		titleLabel.setText("Twacker");
-		titleLabel.setHeight("100px");
-		titleLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		logoImage.getElement().getStyle().setWidth(700, Unit.PX);
+		logoImage.getElement().getStyle().setHeight(100, Unit.PX);
 		
-		rightSidePanel.add(titleLabel);
+		//Initialize title label, add to RSP
+//		titleLabel.setText("Twacker");
+//		titleLabel.setHeight("100px");
+//		titleLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+		
+//		rightSidePanel.add(titleLabel);
+		rightSidePanel.add(logoImage);
 		rightSidePanel.setWidth("700px");
 		rightSidePanel.setBorderWidth(1);
 		
@@ -82,12 +92,17 @@ public class HomeView extends View {
 		signInUp = new Hyperlink("Sign-in", "AUTH"); 
 		signOut = new Hyperlink("Sign-out", "SIGNOUT"); 
 		
-		signPanel.setSpacing(10);
-		signPanel.add(signInUp);
-		signPanel.add(new Label("  |  "));
-		signPanel.add(signOut);	
-		
-//		mainPanel.add(signPanel);
+		if (isSignedIn()){
+			signPanel.add(signOut);
+		}else{
+			signPanel.add(signInUp);
+		}
+//		
+//		signPanel.setSpacing(10);
+//		signPanel.add(signInUp);
+//		signPanel.add(new Label("  |  "));
+//		signPanel.add(signOut);	
+//		
 		leftSidePanel.add(signPanel);
 		leftSidePanel.setWidth("200px");
 		
@@ -106,16 +121,10 @@ public class HomeView extends View {
 		searchBox3.setText(FieldVerifier.SECONDARY_DEFAULT);
 		searchBox.selectAll();
 		
-//		mainPanel.add(searchPanel);
-//		mainPanel.add(infoLabel);
-//		mainPanel.add(saveStatusLabel);
-		
-		
 		resultsTab.add(histogramPanel, "Histogram");
 		resultsTab.add(sentimentPanel, "Sentiment");
 		resultsTab.add(expertsPanel, "Experts");
 		resultsTab.setVisible(false);
-//		mainPanel.add(resultsTab);
 		
 		rightSidePanel.add(searchPanel);
 		rightSidePanel.add(infoLabel);
@@ -209,7 +218,6 @@ public class HomeView extends View {
 		superPanel.setBorderWidth(4);
 //		superPanel.setWidth("900px");
 		
-//		initWidget(mainPanel);
 		initWidget(superPanel);
 	}
 
@@ -235,5 +243,5 @@ public class HomeView extends View {
 						+ caught.getMessage());
 			}
 		});
-	}
+	} 
 }

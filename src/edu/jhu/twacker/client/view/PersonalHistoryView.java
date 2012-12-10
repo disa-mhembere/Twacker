@@ -222,4 +222,9 @@ public class PersonalHistoryView extends View
 	{
 		this.singleSearchDate = singleSearchDate;
 	}
+
+	public VerticalPanel getHistoryPanel()
+	{
+		return histPanel;
+	}
 }

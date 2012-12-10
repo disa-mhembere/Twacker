@@ -8,18 +8,18 @@ package edu.jhu.twacker.client.manager;
 import java.util.HashMap;
 
 import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+//import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.core.client.GWT;
+//import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 
-import edu.jhu.twacker.client.service.AuthService;
-import edu.jhu.twacker.client.service.AuthServiceAsync;
+//import edu.jhu.twacker.client.service.AuthService;
+//import edu.jhu.twacker.client.service.AuthServiceAsync;
 import edu.jhu.twacker.client.view.HomeView;
 import edu.jhu.twacker.client.view.AuthView;
 import edu.jhu.twacker.client.view.SignOutView;
-import edu.jhu.twacker.client.view.PersonalHistoryView;
+//import edu.jhu.twacker.client.view.PersonalHistoryView;
 import edu.jhu.twacker.client.view.RegisterView;
 import edu.jhu.twacker.client.view.View;
 import edu.jhu.twacker.client.view.ViewEnum;
@@ -36,8 +36,8 @@ public class ViewManager implements ValueChangeHandler<String>
 	private static ViewManager instance;
 	private static HashMap<ViewEnum, View> allViews = new HashMap<ViewEnum, View>(); 
 	// Map of all views & corresponding Enums
-	private AuthServiceAsync authService = GWT.create(AuthService.class);
-	private boolean signedIn = false;
+//	private AuthServiceAsync authService = GWT.create(AuthService.class);
+//	private boolean signedIn = false;
 
 	/**
 	 * Private constructor for singleton pattern Register all views here which
@@ -86,12 +86,14 @@ public class ViewManager implements ValueChangeHandler<String>
 	public void loadBaseView()
 	{
 		// Consistently loaded upon launch content
-		RootPanel.get("body").add(new HomeView());
+		// AT: why do we make a new homeview here?
+		//RootPanel.get("body").add(new HomeView());
+		RootPanel.get("body").add(allViews.get(ViewEnum.HOME));
 		
 		// Only load this panel if user is signed in
-		if (isUserSignedIn()){
-			RootPanel.get("history").add(new PersonalHistoryView());	
-		}
+//		if (isUserSignedIn()){
+//			RootPanel.get("history").add(new PersonalHistoryView());	
+//		}
 		 
 		// TODO AT: Figure out when to load this 
 
@@ -114,6 +116,7 @@ public class ViewManager implements ValueChangeHandler<String>
 		try
 		{
 			view = allViews.get(body);
+			view.updateStatus();
 		} catch (RuntimeException r)
 		{
 			throw new RuntimeException("Unknown view TODO: " + body.toString());
@@ -121,10 +124,10 @@ public class ViewManager implements ValueChangeHandler<String>
 
 		RootPanel.get("body").clear();
 		RootPanel.get("body").add(view);
-		if (isUserSignedIn()){
-			RootPanel.get("history").clear();
-			RootPanel.get("history").add(new PersonalHistoryView());	
-		}
+//		if (isUserSignedIn()){
+//			RootPanel.get("history").clear();
+//			RootPanel.get("history").add(new PersonalHistoryView());	
+//		}
 
 	}
 
@@ -141,6 +144,7 @@ public class ViewManager implements ValueChangeHandler<String>
 		try
 		{
 			view = ViewEnum.valueOf(event.getValue());
+			
 		} catch (IllegalArgumentException e)
 		{
 			return;
@@ -152,29 +156,28 @@ public class ViewManager implements ValueChangeHandler<String>
 	 * Determine if a user is signed in or we are operating under a guest account
 	 * @return true if user is signed in else false
 	 */
-	@SuppressWarnings("unused")
-	private boolean isUserSignedIn()
-	{
-		authService.isSignedIn(new AsyncCallback<Boolean>()
-		{
-
-			@Override
-			public void onSuccess(Boolean result)
-			{
-				signedIn = result;
-			}
-
-			@Override
-			public void onFailure(Throwable caught)
-			{
-				signedIn = false;
-				// Log.debug("DM :Failure edu.jhu.twacker.client.HomeView.isUserSignedIn"
-				// + caught.getLocalizedMessage());
-			}
-
-		});
-
-		return signedIn;
-	}
+//	private boolean isUserSignedIn()
+//	{
+//		authService.isSignedIn(new AsyncCallback<Boolean>()
+//		{
+//
+//			@Override
+//			public void onSuccess(Boolean result)
+//			{
+//				signedIn = result;
+//			}
+//
+//			@Override
+//			public void onFailure(Throwable caught)
+//			{
+//				signedIn = false;
+//				// Log.debug("DM :Failure edu.jhu.twacker.client.HomeView.isUserSignedIn"
+//				// + caught.getLocalizedMessage());
+//			}
+//
+//		});
+//
+//		return signedIn;
+//	}
 
 }
