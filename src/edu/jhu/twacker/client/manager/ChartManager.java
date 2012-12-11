@@ -1,5 +1,7 @@
 package edu.jhu.twacker.client.manager;
 
+import java.util.Calendar;
+import java.util.Date;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -64,8 +66,7 @@ public class ChartManager {
 	
 	public static void initDataTable() {
 		table = DataTable.create();
-		table.addColumn(ColumnType.NUMBER, "Day");
-		table.addRows(30);
+		table.addColumn(ColumnType.DATE, "Day");
 		count = 0;
 	}	
 	
@@ -78,10 +79,18 @@ public class ChartManager {
 		for (int i = 0; i < days.length; i++) {
 			counts[i] = Integer.parseInt(days[i].replaceAll("\\D", ""));
 		}
+		
+		if (count == 0)
+			table.addRows(counts.length);
+		
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(new Date());		
 
 		for (int i = 0; i < counts.length; i++) {
-			if (count == 0)
-				table.setValue(i, 0, i);
+			if (count == 0) {
+				cal.add(Calendar.DAY_OF_YEAR, -1);
+				table.setValue(i, 0, cal.getTime());
+			}
 			table.setValue(i, count + 1, counts[i]);
 		}
 		count++;
@@ -93,6 +102,10 @@ public class ChartManager {
 		options.setHeight(525);
 		options.setTitle("Twacker Frequency");
 		options.setPointSize(5);
+//		DateFormat.Options o = DateFormat.Options.create();
+//		o.setPattern(DateFormat.FormatType.SHORT);
+//		DateFormat f = DateFormat.create(o);
+//		f.format(table, 0);
 		AxisOptions opt = AxisOptions.create();
 		opt.set("viewWindowMode", "pretty");
 		options.setHAxisOptions(opt);
