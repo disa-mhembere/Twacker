@@ -1,6 +1,5 @@
 package edu.jhu.twacker.client.manager;
 
-import java.util.Calendar;
 import java.util.Date;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.HTML;
@@ -57,6 +56,7 @@ public class ChartManager {
 		options.setWidth(700);
 		options.setHeight(175);
 		options.setTitle("Sentiment Results for "	+ result.substring(result.indexOf(": \"")+3, result.indexOf("\", ")));
+		options.setColors("GreenYellow", "Red", "LightGray");
 		return options;
 	}
 	
@@ -70,6 +70,7 @@ public class ChartManager {
 		count = 0;
 	}	
 	
+	@SuppressWarnings("deprecation")
 	public static void updateTable(String result) {
 		table.addColumn(ColumnType.NUMBER, 
 						result.substring(result.indexOf(": \"")+3, result.indexOf("\",")));
@@ -80,16 +81,16 @@ public class ChartManager {
 			counts[i] = Integer.parseInt(days[i].replaceAll("\\D", ""));
 		}
 		
-		if (count == 0)
+		if (count == 0) {
 			table.addRows(counts.length);
-		
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(new Date());		
+		}
+		Date d = new Date();
+		d.setDate(d.getDate()-counts.length);
 
 		for (int i = 0; i < counts.length; i++) {
 			if (count == 0) {
-				cal.add(Calendar.DAY_OF_YEAR, -1);
-				table.setValue(i, 0, cal.getTime());
+				d.setDate(d.getDate()+1);
+				table.setValue(i, 0, d);
 			}
 			table.setValue(i, count + 1, counts[i]);
 		}
@@ -102,12 +103,8 @@ public class ChartManager {
 		options.setHeight(525);
 		options.setTitle("Twacker Frequency");
 		options.setPointSize(5);
-//		DateFormat.Options o = DateFormat.Options.create();
-//		o.setPattern(DateFormat.FormatType.SHORT);
-//		DateFormat f = DateFormat.create(o);
-//		f.format(table, 0);
 		AxisOptions opt = AxisOptions.create();
-		opt.set("viewWindowMode", "pretty");
+		opt.set("viewWindowMode", "maximized");
 		options.setHAxisOptions(opt);
 		return options;
 	}
