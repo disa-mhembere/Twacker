@@ -18,8 +18,8 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 //import edu.jhu.twacker.client.service.AuthServiceAsync;
 import edu.jhu.twacker.client.view.HomeView;
 import edu.jhu.twacker.client.view.AuthView;
+import edu.jhu.twacker.client.view.PersonalHistoryView;
 import edu.jhu.twacker.client.view.SignOutView;
-//import edu.jhu.twacker.client.view.PersonalHistoryView;
 import edu.jhu.twacker.client.view.RegisterView;
 import edu.jhu.twacker.client.view.View;
 import edu.jhu.twacker.client.view.ViewEnum;
@@ -50,6 +50,7 @@ public class ViewManager implements ValueChangeHandler<String>
 		registerView(ViewEnum.HOME, new HomeView());
 		registerView(ViewEnum.REGISTER, new RegisterView());
 		registerView(ViewEnum.SIGNOUT, new SignOutView());
+		registerView(ViewEnum.HISTORY, new PersonalHistoryView());
 		History.addValueChangeHandler(this);
 	}
 
@@ -94,8 +95,6 @@ public class ViewManager implements ValueChangeHandler<String>
 //		if (isUserSignedIn()){
 //			RootPanel.get("history").add(new PersonalHistoryView());	
 //		}
-		 
-		// TODO AT: Figure out when to load this 
 
 
 		if (History.getToken().length() == 0)
@@ -124,11 +123,6 @@ public class ViewManager implements ValueChangeHandler<String>
 
 		RootPanel.get("body").clear();
 		RootPanel.get("body").add(view);
-//		if (isUserSignedIn()){
-//			RootPanel.get("history").clear();
-//			RootPanel.get("history").add(new PersonalHistoryView());	
-//		}
-
 	}
 
 	/**
@@ -152,10 +146,10 @@ public class ViewManager implements ValueChangeHandler<String>
 		setBody(view);
 	}
 
-	/**
-	 * Determine if a user is signed in or we are operating under a guest account
-	 * @return true if user is signed in else false
-	 */
+//	/**
+//	 * Determine if a user is signed in or we are operating under a guest account
+//	 * @return true if user is signed in else false
+//	 */
 //	private boolean isUserSignedIn()
 //	{
 //		authService.isSignedIn(new AsyncCallback<Boolean>()

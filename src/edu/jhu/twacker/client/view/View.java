@@ -19,11 +19,11 @@ import edu.jhu.twacker.client.service.AuthServiceAsync;
  */
 public class View extends Composite
 {
-	private boolean isSignedIn;
+	private boolean isSignedIn = false;
 	private final AuthServiceAsync authService = GWT.create(AuthService.class);
 
 	/**
-	 * Intentional No-op constructor
+	 * Intentional No-operation constructor
 	 */
 	View()
 	{
@@ -31,8 +31,9 @@ public class View extends Composite
 	}
 
 	/**
-	 * Determine if a user is signed in or we are operating under a guest
-	 * account
+	 * Initiates an asynchronous call to check whether the user is signed in.
+	 * updateView() will be called so that any necessary changes are made if the
+	 * user is signed in
 	 */
 	public void updateStatus()
 	{
@@ -40,7 +41,10 @@ public class View extends Composite
 			@Override
 			public void onSuccess(Boolean result)
 			{
-				isSignedIn = result;
+				if (isSignedIn != result) {
+					isSignedIn = result;
+					updateView();
+				}
 			}
 
 			@Override
@@ -51,9 +55,24 @@ public class View extends Composite
 		});
 	}
 
+	/**
+	 * Returns the view's perception of the user's current signed in state
+	 * 
+	 * @return
+	 */
 	public boolean isSignedIn()
 	{
 		return isSignedIn;
+	}
+
+	/**
+	 * This method is called whenever updateStatus() results in a state change.
+	 * This allows us to, if necessary, update the panels depending on the
+	 * user's logged in status
+	 */
+	protected void updateView()
+	{
+
 	}
 
 }
