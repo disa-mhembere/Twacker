@@ -34,9 +34,10 @@ import com.allen_sauer.gwt.log.client.Log;
  */
 public class PersonalHistoryView extends View
 {
-
 	private final SearchServiceAsync historyService = GWT
 			.create(SearchService.class);
+	
+	
 	private DatePicker calendar;
 	private Button submitButton;
 	private Button searchAllButton;
