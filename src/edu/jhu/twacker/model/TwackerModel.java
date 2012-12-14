@@ -59,7 +59,7 @@ public class TwackerModel
 	{
 		this.search = search;
 		
-		this.histogram = new HistogramExec(this.search, "86400", "10");
+		this.histogram = new HistogramExec(this.search, "86400", "30");
 		this.sentiment = new SentimentExec(this.search);
 		this.experts = new ExpertsExec(this.search);
 		
