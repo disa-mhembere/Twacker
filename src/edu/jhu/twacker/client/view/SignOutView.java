@@ -73,7 +73,6 @@ public class SignOutView extends View
 			public void onClick(ClickEvent event)
 			{
 				 Window.alert("This ain't Google fool! Get outta here!");
-				
 			}
 		});
 		

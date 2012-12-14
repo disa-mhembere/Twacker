@@ -25,6 +25,8 @@ import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import edu.jhu.twacker.client.manager.ChartManager;
+import edu.jhu.twacker.client.service.AuthService;
+import edu.jhu.twacker.client.service.AuthServiceAsync;
 import edu.jhu.twacker.client.service.SearchService;
 import edu.jhu.twacker.client.service.SearchServiceAsync;
 import edu.jhu.twacker.shared.FieldVerifier;
@@ -40,29 +42,28 @@ public class HomeView extends View
 	private final String logoURL = "http://www.ugrad.cs.jhu.edu/~group4/final/twacker.png";
 	private final SearchServiceAsync queryService = GWT
 			.create(SearchService.class);
-	// private final AuthServiceAsync authService =
-	// GWT.create(AuthService.class);
-
-	// private boolean isSignedIn = false;
+	private final AuthServiceAsync authService = GWT.create(AuthService.class);
 
 	// Picture and mainPanels
 	private Image logoImage = new Image(logoURL);
 	private HorizontalPanel superPanel = new HorizontalPanel();
 	private VerticalPanel leftSidePanel = new VerticalPanel();
 	private VerticalPanel rightSidePanel = new VerticalPanel();
-	
-	//Left side Panel Widgets
+
+	// Left side Panel Widgets
 	private Hyperlink signInUp = new Hyperlink("Sign-in", "AUTH");
-	private Hyperlink signOut= new Hyperlink("Sign-out", "SIGNOUT");
-	private Hyperlink personalHistory = new Hyperlink("Personal History", "HISTORY");
+	private Hyperlink signOut = new Hyperlink("Sign-out", "SIGNOUT");
+	private Hyperlink personalHistory = new Hyperlink("Personal History",
+			"HISTORY");
 	private HorizontalPanel signPanel = new HorizontalPanel();
-	
-	//TabPanel and Widgets
+	private Label signInStatusLabel = new Label();
+
+	// TabPanel and Widgets
 	private TabPanel resultsTab = new TabPanel();
 	private VerticalPanel histogramPanel = new VerticalPanel();
 	private VerticalPanel sentimentPanel = new VerticalPanel();
 	private StackPanel expertsPanel = new StackPanel();
-	
+
 	// Right Panel Widgets
 	private VerticalPanel searchPanel = new VerticalPanel();
 	private HorizontalPanel boxPanel = new HorizontalPanel();
@@ -81,28 +82,19 @@ public class HomeView extends View
 		logoImage.getElement().getStyle().setWidth(700, Unit.PX);
 		logoImage.getElement().getStyle().setHeight(100, Unit.PX);
 
-		// Initialize title label, add to RSP
-		// titleLabel.setText("Twacker");
-		// titleLabel.setHeight("100px");
-		// titleLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-
-		// rightSidePanel.add(titleLabel);
 		rightSidePanel.add(logoImage);
 		rightSidePanel.setWidth("700px");
 		rightSidePanel.setBorderWidth(1);
 
 		if (isSignedIn()) {
+			signPanel.setSpacing(10);
 			signPanel.add(signOut);
 			signPanel.add(personalHistory);
 		} else {
+			signPanel.setSpacing(10);
 			signPanel.add(signInUp);
 		}
-		//
-		// signPanel.setSpacing(10);
-		// signPanel.add(signInUp);
-		// signPanel.add(new Label("  |  "));
-		// signPanel.add(signOut);
-		//
+
 		leftSidePanel.add(signPanel);
 		leftSidePanel.setWidth("200px");
 
@@ -267,12 +259,13 @@ public class HomeView extends View
 	{
 		super.updateView();
 		signPanel.clear();
-
 		if (isSignedIn()) {
+			signPanel.setSpacing(10);
 			signPanel.add(signOut);
 			signPanel.add(new Label("  |  "));
 			signPanel.add(personalHistory);
 		} else {
+			signPanel.setSpacing(10);
 			signPanel.add(signInUp);
 		}
 	}
