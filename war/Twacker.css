@@ -1,9 +1,12 @@
 /** Twacker.css */
 
+.preClickTextBox{
+	color: gray;
+}
+
 .imageClick{
 	cursor: pointer;
 }
-
 
 h1 {
   font-size: 2em;

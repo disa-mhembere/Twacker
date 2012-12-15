@@ -77,10 +77,11 @@ public class View extends Composite
 			@Override
 			public void onSuccess(Boolean result)
 			{
-				if (isSignedIn != result) {
-					isSignedIn = result;
-					updateView();
-				}
+				isSignedIn = result;
+//				if (isSignedIn != result) {
+//					isSignedIn = result;
+//					updateView();
+//				}
 			}
 
 			@Override
@@ -106,7 +107,7 @@ public class View extends Composite
 	 * This allows us to, if necessary, update the panels depending on the
 	 * user's logged in status
 	 */
-	protected void updateView()
+	public void updateView()
 	{
 
 	}

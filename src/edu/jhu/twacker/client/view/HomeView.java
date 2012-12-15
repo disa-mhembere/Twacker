@@ -99,6 +99,11 @@ public class HomeView extends View
 		searchBox.setText(FieldVerifier.PRIMARY_DEFAULT);
 		searchBox2.setText(FieldVerifier.SECONDARY_DEFAULT);
 		searchBox3.setText(FieldVerifier.SECONDARY_DEFAULT);
+		
+		searchBox.addStyleName("preClickTextBox");
+		searchBox2.addStyleName("preClickTextBox");
+		searchBox3.addStyleName("preClickTextBox");
+		
 		searchBox.selectAll();
 
 		resultsTab.add(histogramPanel, "Histogram");
@@ -195,13 +200,35 @@ public class HomeView extends View
 				}
 			}
 		}
-
+		
+		// This handler takes care of the removal of text from textbox
+		class TextBoxClickHandler implements ClickHandler
+		{
+			@Override
+			public void onClick(ClickEvent event)
+			{
+				if (searchBox.getText().equals("(required)")){
+					searchBox.setText("");
+					searchBox2.setText("");
+					searchBox3.setText("");
+					searchBox.removeStyleName("preClickTextBox");
+					searchBox2.removeStyleName("preClickTextBox");
+					searchBox3.removeStyleName("preClickTextBox");
+				}
+			}
+		}
+		
+		
 		// Add a handler to send the name to the server
 		SearchButtonHandler handler = new SearchButtonHandler();
+		TextBoxClickHandler clickHandler = new TextBoxClickHandler();
 		searchButton.addClickHandler(handler);
 		searchBox.addKeyUpHandler(handler);
 		searchBox2.addKeyUpHandler(handler);
 		searchBox3.addKeyUpHandler(handler);
+		searchBox.addClickHandler(clickHandler);
+		searchBox2.addClickHandler(clickHandler);
+		searchBox3.addClickHandler(clickHandler);
 	}
 
 	/**
@@ -236,7 +263,7 @@ public class HomeView extends View
 	 * has changed.
 	 */
 	@Override
-	protected void updateView()
+	public void updateView()
 	{
 		super.updateView();
 		signPanel.clear();
@@ -249,5 +276,14 @@ public class HomeView extends View
 			signPanel.setSpacing(10);
 			signPanel.add(signInUp);
 		}
+		
+		searchBox.setFocus(true);
+		searchBox.setText(FieldVerifier.PRIMARY_DEFAULT);
+		searchBox2.setText(FieldVerifier.SECONDARY_DEFAULT);
+		searchBox3.setText(FieldVerifier.SECONDARY_DEFAULT);
+		
+		searchBox.addStyleName("preClickTextBox");
+		searchBox2.addStyleName("preClickTextBox");
+		searchBox3.addStyleName("preClickTextBox");
 	}
 }

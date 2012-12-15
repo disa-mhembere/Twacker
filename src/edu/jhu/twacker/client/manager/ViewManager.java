@@ -34,10 +34,11 @@ import edu.jhu.twacker.client.view.ViewEnum;
 public class ViewManager implements ValueChangeHandler<String>
 {
 	private static ViewManager instance;
-	private static HashMap<ViewEnum, View> allViews = new HashMap<ViewEnum, View>(); 
+	private static HashMap<ViewEnum, View> allViews = new HashMap<ViewEnum, View>();
+
 	// Map of all views & corresponding Enums
-//	private AuthServiceAsync authService = GWT.create(AuthService.class);
-//	private boolean signedIn = false;
+	// private AuthServiceAsync authService = GWT.create(AuthService.class);
+	// private boolean signedIn = false;
 
 	/**
 	 * Private constructor for singleton pattern Register all views here which
@@ -59,9 +60,9 @@ public class ViewManager implements ValueChangeHandler<String>
 	 * hashMap
 	 * 
 	 * @param vE
-	 *           the enum corresponding to the view <code>v</code>
+	 *            the enum corresponding to the view <code>v</code>
 	 * @param v
-	 *           the view
+	 *            the view
 	 */
 	private void registerView(ViewEnum vE, View v)
 	{
@@ -87,18 +88,10 @@ public class ViewManager implements ValueChangeHandler<String>
 	public void loadBaseView()
 	{
 		// Consistently loaded upon launch content
-		// AT: why do we make a new homeview here?
-		//RootPanel.get("body").add(new HomeView());
+		// RootPanel.get("body").add(new HomeView());
 		RootPanel.get("body").add(allViews.get(ViewEnum.HOME));
-		
-		// Only load this panel if user is signed in
-//		if (isUserSignedIn()){
-//			RootPanel.get("history").add(new PersonalHistoryView());	
-//		}
 
-
-		if (History.getToken().length() == 0)
-		{
+		if (History.getToken().length() == 0) {
 			History.newItem("HOME");
 		}
 	}
@@ -107,17 +100,16 @@ public class ViewManager implements ValueChangeHandler<String>
 	 * Sets the body of the website to a certain view
 	 * 
 	 * @param body
-	 *           enum corresponding to view in <code>allViews HashMap</code>
+	 *            enum corresponding to view in <code>allViews HashMap</code>
 	 */
 	public void setBody(ViewEnum body)
 	{
 		View view;
-		try
-		{
+		try {
 			view = allViews.get(body);
+			view.updateView();
 			view.updateStatus();
-		} catch (RuntimeException r)
-		{
+		} catch (RuntimeException r) {
 			throw new RuntimeException("Unknown view TODO: " + body.toString());
 		}
 
@@ -127,51 +119,49 @@ public class ViewManager implements ValueChangeHandler<String>
 
 	/**
 	 * Processes the hyperlink clicks
-	 * 
 	 * @param event
-	 *           The event of the hyperlink click
+	 *            The event of the hyperlink click
 	 */
 	@Override
 	public void onValueChange(ValueChangeEvent<String> event)
 	{
 		ViewEnum view = ViewEnum.HOME;
-		try
-		{
+		try {
 			view = ViewEnum.valueOf(event.getValue());
-			
-		} catch (IllegalArgumentException e)
-		{
+
+		} catch (IllegalArgumentException e) {
 			return;
 		}
 		setBody(view);
 	}
 
-//	/**
-//	 * Determine if a user is signed in or we are operating under a guest account
-//	 * @return true if user is signed in else false
-//	 */
-//	private boolean isUserSignedIn()
-//	{
-//		authService.isSignedIn(new AsyncCallback<Boolean>()
-//		{
-//
-//			@Override
-//			public void onSuccess(Boolean result)
-//			{
-//				signedIn = result;
-//			}
-//
-//			@Override
-//			public void onFailure(Throwable caught)
-//			{
-//				signedIn = false;
-//				// Log.debug("DM :Failure edu.jhu.twacker.client.HomeView.isUserSignedIn"
-//				// + caught.getLocalizedMessage());
-//			}
-//
-//		});
-//
-//		return signedIn;
-//	}
+	// /**
+	// * Determine if a user is signed in or we are operating under a guest
+	// account
+	// * @return true if user is signed in else false
+	// */
+	// private boolean isUserSignedIn()
+	// {
+	// authService.isSignedIn(new AsyncCallback<Boolean>()
+	// {
+	//
+	// @Override
+	// public void onSuccess(Boolean result)
+	// {
+	// signedIn = result;
+	// }
+	//
+	// @Override
+	// public void onFailure(Throwable caught)
+	// {
+	// signedIn = false;
+	// // Log.debug("DM :Failure edu.jhu.twacker.client.HomeView.isUserSignedIn"
+	// // + caught.getLocalizedMessage());
+	// }
+	//
+	// });
+	//
+	// return signedIn;
+	// }
 
 }
