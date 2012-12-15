@@ -78,10 +78,7 @@ public class View extends Composite
 			public void onSuccess(Boolean result)
 			{
 				isSignedIn = result;
-//				if (isSignedIn != result) {
-//					isSignedIn = result;
-//					updateView();
-//				}
+				updateView();
 			}
 
 			@Override

@@ -51,7 +51,6 @@ public class RegisterView extends View
 	private Button continueNoSignUpButton = new Button(
 			"Guest");
 
-	private Label emailLabel = new Label("Enter optional E-mail address");
 	private TextBox emailTextBox = new TextBox();
 	private Label infoLabel = new Label();
 
@@ -61,23 +60,22 @@ public class RegisterView extends View
 	public RegisterView()
 	{
 		super();
-		usernameTextBox.setText("e.g gangnam");
 		infoLabel.setVisible(false);
-		emailTextBox.setText("someone@something.com");
+//		emailTextBox.setText("someone@something.com");
 
 		// Assemble sign-up panel
-		signUpPanel.add(new Label("Sign-up"));
-		signUpPanel.add(new Label("First Name"));
+		signUpPanel.add(new Label("Sign-up!"));
+		signUpPanel.add(new Label("First Name:"));
 		signUpPanel.add(firstNameTextBox);
-		signUpPanel.add(new Label("Last Name"));
+		signUpPanel.add(new Label("Last Name:"));
 		signUpPanel.add(lastNameTextBox);
-		signUpPanel.add(new Label("Username"));
+		signUpPanel.add(new Label("Username:"));
 		signUpPanel.add(usernameTextBox);
-		signUpPanel.add(new Label("Enter Password"));
+		signUpPanel.add(new Label("Enter password:"));
 		signUpPanel.add(signUpPasswordBox);
-		signUpPanel.add(new Label("Re-Enter password"));
+		signUpPanel.add(new Label("Confirm password:"));
 		signUpPanel.add(verifyPasswordBox);
-		signUpPanel.add(emailLabel);
+		signUpPanel.add(new Label("Enter e-mail address:"));
 		signUpPanel.add(emailTextBox);
 
 		Grid buttonPanel = new Grid(1, 2);
@@ -85,8 +83,9 @@ public class RegisterView extends View
 		buttonPanel.setWidget(0, 1, continueNoSignUpButton);
 		signUpPanel.add(buttonPanel);
 		signUpPanel.add(accountAlreadyHyperlink);
-		signUpPanel.add(infoLabel);
+		//signUpPanel.add(infoLabel);
 
+		rightSidePanel.add(infoLabel);
 		leftSidePanel.add(signUpPanel);
 		// initWidget(signUpPanel); // instantiate widget
 
@@ -256,6 +255,18 @@ public class RegisterView extends View
 	{
 		return this.infoLabel.getText();
 
+	}
+	
+	@Override
+	public void updateView()
+	{
+		super.updateView();
+		firstNameTextBox.setText("");
+		lastNameTextBox.setText("");
+		usernameTextBox.setText("");
+		signUpPasswordBox.setText("");
+		verifyPasswordBox.setText("");
+		emailTextBox.setText("");
 	}
 
 }

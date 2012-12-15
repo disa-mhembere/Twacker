@@ -18,6 +18,9 @@ import com.google.gwt.user.client.ui.Label;
 // Event handling
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 
 // Authentication
 import com.google.gwt.core.client.GWT;
@@ -29,7 +32,7 @@ import edu.jhu.twacker.shared.FieldVerifier;
  * View for user sign-in & sign-up If a user chooses to not sign-up/sign-in the
  * default username & password are applied
  * 
- * @author Disa Mhembere
+ * @author Disa Mhembere, Andy Tien
  */
 public class AuthView extends View
 {
@@ -52,7 +55,8 @@ public class AuthView extends View
 	public AuthView()
 	{
 		super();
-		usernameTextBox.setText("e.g gangnam");
+		usernameTextBox.setText("e.g. gangnam");
+		usernameTextBox.addStyleName("preClickTextBox");
 		infoLabel.setVisible(false);
 
 		// Assemble sign-in panel
@@ -67,7 +71,8 @@ public class AuthView extends View
 		buttonPanel.setWidget(0, 1, continueNoSignInButton);
 		signInPanel.add(buttonPanel);
 		signInPanel.add(registerHyperlink);
-		signInPanel.add(infoLabel);
+		// signInPanel.add(infoLabel);
+		rightSidePanel.add(infoLabel);
 
 		// signInPanel.add(whoami);
 
@@ -78,6 +83,21 @@ public class AuthView extends View
 			{
 				requestSignIn(usernameTextBox.getText(),
 						signInPasswordBox.getText());
+				// usernameTextBox.setText("");
+				signInPasswordBox.setText("");
+			}
+		});
+
+		signInPasswordBox.addKeyUpHandler(new KeyUpHandler() {
+
+			@Override
+			public void onKeyUp(KeyUpEvent event)
+			{
+				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+					requestSignIn(usernameTextBox.getText(),
+							signInPasswordBox.getText());
+				}
+
 			}
 		});
 
@@ -86,6 +106,8 @@ public class AuthView extends View
 			public void onClick(ClickEvent event)
 			{
 				requestNoSignIn();
+				usernameTextBox.setText("");
+				signInPasswordBox.setText("");
 			}
 		});
 
@@ -100,7 +122,6 @@ public class AuthView extends View
 					{
 						infoLabel.setVisible(true);
 						infoLabel.setText("I am: " + result);
-
 					}
 
 					@Override
@@ -111,6 +132,18 @@ public class AuthView extends View
 					}
 				});
 
+			}
+		});
+
+		usernameTextBox.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event)
+			{
+				if (usernameTextBox.getStyleName().contains("preClickTextBox")) {
+					usernameTextBox.removeStyleName("preClickTextBox");
+					usernameTextBox.setText("");
+				}
 			}
 		});
 
@@ -131,7 +164,7 @@ public class AuthView extends View
 			public void onSuccess(Void result)
 			{
 				infoLabel.setVisible(true);
-				infoLabel.setText("Entering Twacker site as guest");
+				infoLabel.setText("Entering Twacker site as guest.");
 				History.newItem("HOME"); // Don't want to login? Then redirect
 											// to homepage
 			}
@@ -158,7 +191,7 @@ public class AuthView extends View
 				{
 					if (result == null) {
 						infoLabel.setVisible(true);
-						infoLabel.setText("incorrect username or password");
+						infoLabel.setText("Incorrect username or password.");
 					} else {
 						infoLabel.setVisible(true);
 						infoLabel.setText("Sign-in Sucessful! Welcome "
@@ -197,7 +230,7 @@ public class AuthView extends View
 			infoLabel.setVisible(true);
 			if (username.length() < 3) {
 				infoLabel
-						.setText("Username too short. That can't be your username");
+						.setText("Username too short. That can't be your username!");
 			} else {
 				infoLabel.setText("Invalid username. Try again");
 			}
@@ -220,4 +253,13 @@ public class AuthView extends View
 		return true;
 	}
 
+	@Override
+	public void updateView()
+	{
+		super.updateView();
+		usernameTextBox.setText("e.g. gangnam");
+		usernameTextBox.addStyleName("preClickTextBox");
+		infoLabel.setText("");
+		signInPasswordBox.setText("");
+	}
 }

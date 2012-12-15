@@ -78,10 +78,13 @@ public class HomeView extends View
 		if (isSignedIn()) {
 			signPanel.setSpacing(10);
 			signPanel.add(signOut);
+			signPanel.add(new Label("  |  "));
 			signPanel.add(personalHistory);
 		} else {
 			signPanel.setSpacing(10);
 			signPanel.add(signInUp);
+			signPanel.add(new Label("  |  "));
+			signPanel.add(personalHistory);
 		}
 
 		leftSidePanel.add(signPanel);
@@ -194,6 +197,7 @@ public class HomeView extends View
 										.createLineChart(result));
 								resultsTab.setVisible(true);
 								resultsTab.selectTab(0);
+								saveStatusLabel.setText("");
 							}
 						}
 					});
@@ -207,7 +211,7 @@ public class HomeView extends View
 			@Override
 			public void onClick(ClickEvent event)
 			{
-				if (searchBox.getText().equals("(required)")){
+				if (searchBox.getStyleName().contains("preClickTextBox")){
 					searchBox.setText("");
 					searchBox2.setText("");
 					searchBox3.setText("");
@@ -275,6 +279,8 @@ public class HomeView extends View
 		} else {
 			signPanel.setSpacing(10);
 			signPanel.add(signInUp);
+			signPanel.add(new Label("  |  "));
+			signPanel.add(personalHistory);
 		}
 		
 		searchBox.setFocus(true);
@@ -285,5 +291,11 @@ public class HomeView extends View
 		searchBox.addStyleName("preClickTextBox");
 		searchBox2.addStyleName("preClickTextBox");
 		searchBox3.addStyleName("preClickTextBox");
+		
+		sentimentPanel.clear();
+		histogramPanel.clear();
+		expertsPanel.clear();
+		resultsTab.setVisible(false);
+		saveStatusLabel.setText("");
 	}
 }

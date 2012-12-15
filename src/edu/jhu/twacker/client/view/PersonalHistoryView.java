@@ -20,7 +20,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.VerticalPanel;
+//import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.datepicker.client.DatePicker;
 
 import edu.jhu.twacker.client.service.SearchService;
@@ -42,7 +42,7 @@ public class PersonalHistoryView extends View
 	private Button submitButton;
 	private Button searchAllButton;
 	private HorizontalPanel buttonPanel;
-	private VerticalPanel histPanel;
+//	private VerticalPanel histPanel;
 
 	// data objects
 	private Map<Date, String> allSearchesMap = new HashMap<Date, String>();
@@ -60,8 +60,9 @@ public class PersonalHistoryView extends View
 	public PersonalHistoryView()
 	{
 		super();
-		histPanel = new VerticalPanel();
+//		histPanel = new VerticalPanel();
 		calendar = new DatePicker();
+		calendar.setWidth("200px");
 		buttonPanel = new HorizontalPanel();
 
 		submitButton = new Button("Submit Search");
@@ -70,12 +71,17 @@ public class PersonalHistoryView extends View
 		buttonPanel.add(submitButton);
 		buttonPanel.add(searchAllButton);
 
-		histPanel.add(calendar);
-		histPanel.add(buttonPanel);
+		
+		leftSidePanel.add(calendar);
+		leftSidePanel.add(buttonPanel);
+		rightSidePanel.add(searchLabel);
+		
+//		histPanel.add(calendar);
+//		histPanel.add(buttonPanel);
 
-		histPanel.add(searchLabel);
+//		histPanel.add(searchLabel);
 
-		leftSidePanel.add(histPanel);
+//		leftSidePanel.add(histPanel);
 		// initWidget(histPanel);
 
 		/*
