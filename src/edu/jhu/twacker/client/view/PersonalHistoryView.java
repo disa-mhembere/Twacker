@@ -30,14 +30,14 @@ import com.allen_sauer.gwt.log.client.Log;
 
 /**
  * This view's purpose is to allow users to query their past search history
+ * 
  * @author Disa Mhembere
  */
 public class PersonalHistoryView extends View
 {
 	private final SearchServiceAsync historyService = GWT
 			.create(SearchService.class);
-	
-	
+
 	private DatePicker calendar;
 	private Button submitButton;
 	private Button searchAllButton;
@@ -50,14 +50,16 @@ public class PersonalHistoryView extends View
 	private Date singleSearchDate = new Date(System.currentTimeMillis());
 	private Label searchLabel = new Label("");
 
-	private DateTimeFormat dateFormat = DateTimeFormat.getFormat("EEEE, MMMM d, yyyy");
+	private DateTimeFormat dateFormat = DateTimeFormat
+			.getFormat("EEEE, MMMM d, yyyy");
 
 	/**
-	 * Default constructor initializes the visual/GUI aspects of
-	 * the view and assembles the widget and handles clicks 
+	 * Default constructor initializes the visual/GUI aspects of the view and
+	 * assembles the widget and handles clicks
 	 */
 	public PersonalHistoryView()
 	{
+		super();
 		histPanel = new VerticalPanel();
 		calendar = new DatePicker();
 		buttonPanel = new HorizontalPanel();
@@ -73,13 +75,13 @@ public class PersonalHistoryView extends View
 
 		histPanel.add(searchLabel);
 
-		initWidget(histPanel);
+		leftSidePanel.add(histPanel);
+		// initWidget(histPanel);
 
 		/*
 		 * Handle calendar events
 		 */
-		calendar.addValueChangeHandler(new ValueChangeHandler<Date>()
-		{
+		calendar.addValueChangeHandler(new ValueChangeHandler<Date>() {
 
 			@Override
 			/**
@@ -95,8 +97,7 @@ public class PersonalHistoryView extends View
 		/*
 		 * Handles the submission button clicks for single search date
 		 */
-		submitButton.addClickHandler(new ClickHandler()
-		{
+		submitButton.addClickHandler(new ClickHandler() {
 
 			@Override
 			/**
@@ -112,8 +113,7 @@ public class PersonalHistoryView extends View
 		/*
 		 * Handle searchAllButton submits
 		 */
-		searchAllButton.addClickHandler(new ClickHandler()
-		{
+		searchAllButton.addClickHandler(new ClickHandler() {
 			@Override
 			/**
 			 * Launch searchService & query datastore for all searches for a user
@@ -131,38 +131,39 @@ public class PersonalHistoryView extends View
 	 */
 	private Map<Date, String> getDayHistory()
 	{
-		
-		historyService.getDaySearches(getSingleSearchDate(),new AsyncCallback<Map<Date,List<String>>>()
-		{
-			
-			@Override
-			public void onSuccess(Map<Date, List<String>> result)
-			{
-				String s = "";
-				
-				for (List<String> searchLists : result.values() )
-				{
-					ArrayList<String> searchArrayLists = new ArrayList<String>(searchLists);
-					for (String st : searchArrayLists)
-					{
-						s += st + ", ";
-					}
-				}
 
-				if (s == "")
-				{
-					s = "No History!";
-				}
-				searchLabel.setText(dateFormat.format(getSingleSearchDate())
-						+ " Searches: " + s);				
-			}
-			
-			@Override
-			public void onFailure(Throwable caught)
-			{
-				Log.debug("DM getAllSearches onFailure: " + caught.getMessage()); // Debug
-			}
-		});
+		historyService.getDaySearches(getSingleSearchDate(),
+				new AsyncCallback<Map<Date, List<String>>>() {
+
+					@Override
+					public void onSuccess(Map<Date, List<String>> result)
+					{
+						String s = "";
+
+						for (List<String> searchLists : result.values()) {
+							ArrayList<String> searchArrayLists = new ArrayList<String>(
+									searchLists);
+							for (String st : searchArrayLists) {
+								s += st + ", ";
+							}
+						}
+
+						if (s == "") {
+							s = "No History!";
+						}
+						searchLabel.setText(dateFormat
+								.format(getSingleSearchDate())
+								+ " Searches: "
+								+ s);
+					}
+
+					@Override
+					public void onFailure(Throwable caught)
+					{
+						Log.debug("DM getAllSearches onFailure: "
+								+ caught.getMessage()); // Debug
+					}
+				});
 		return singleDaySearchesMap;
 	}
 
@@ -171,44 +172,44 @@ public class PersonalHistoryView extends View
 	 */
 	private Map<Date, String> getAllHistory()
 	{
-		
-		historyService.getAllSearches(new AsyncCallback<Map<Date,List<String>>>()
-		{
-			
-			@Override
-			public void onSuccess(Map<Date, List<String>> result)
-			{
-				String s = "";
-				
-				for (List<String> searchLists : result.values() )
-				{
-					ArrayList<String> searchArrayLists = new ArrayList<String>(searchLists);
-					for (String st : searchArrayLists)
-					{
-						s += st + ", ";
-					}
-				}
 
-				if (s == "")
-				{
-					s = "No History!";
-				}
-				searchLabel.setText("All Searches:" + s);
-				// Log.debug(historyService + "s value: " + s);
-			}
-			
-			@Override
-			public void onFailure(Throwable caught)
-			{
-				Log.debug("DM getAllSearches onFailure: " + caught.getMessage()); // Debug
-			}
-		});
-		
+		historyService
+				.getAllSearches(new AsyncCallback<Map<Date, List<String>>>() {
+
+					@Override
+					public void onSuccess(Map<Date, List<String>> result)
+					{
+						String s = "";
+
+						for (List<String> searchLists : result.values()) {
+							ArrayList<String> searchArrayLists = new ArrayList<String>(
+									searchLists);
+							for (String st : searchArrayLists) {
+								s += st + ", ";
+							}
+						}
+
+						if (s == "") {
+							s = "No History!";
+						}
+						searchLabel.setText("All Searches:" + s);
+						// Log.debug(historyService + "s value: " + s);
+					}
+
+					@Override
+					public void onFailure(Throwable caught)
+					{
+						Log.debug("DM getAllSearches onFailure: "
+								+ caught.getMessage()); // Debug
+					}
+				});
+
 		return allSearchesMap;
 	}
 
 	/**
-	 * Get single days history for a user 
+	 * Get single days history for a user
+	 * 
 	 * @return the singleSearchDate
 	 */
 	public Date getSingleSearchDate()
@@ -217,15 +218,11 @@ public class PersonalHistoryView extends View
 	}
 
 	/**
-	 * @param singleSearchDate the singleSearchDate to set
+	 * @param singleSearchDate
+	 *            the singleSearchDate to set
 	 */
 	public void setSingleSearchDate(Date singleSearchDate)
 	{
 		this.singleSearchDate = singleSearchDate;
-	}
-
-	public VerticalPanel getHistoryPanel()
-	{
-		return histPanel;
 	}
 }

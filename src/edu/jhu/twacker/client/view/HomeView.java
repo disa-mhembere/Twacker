@@ -7,7 +7,6 @@ package edu.jhu.twacker.client.view;
 import java.util.LinkedList;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -18,15 +17,14 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import edu.jhu.twacker.client.manager.ChartManager;
-import edu.jhu.twacker.client.service.AuthService;
-import edu.jhu.twacker.client.service.AuthServiceAsync;
+//import edu.jhu.twacker.client.service.AuthService;
+//import edu.jhu.twacker.client.service.AuthServiceAsync;
 import edu.jhu.twacker.client.service.SearchService;
 import edu.jhu.twacker.client.service.SearchServiceAsync;
 import edu.jhu.twacker.shared.FieldVerifier;
@@ -39,16 +37,12 @@ import edu.jhu.twacker.shared.FieldVerifier;
  */
 public class HomeView extends View
 {
-	private final String logoURL = "http://www.ugrad.cs.jhu.edu/~group4/final/twacker.png";
+	// private final String logoURL =
+	// "http://www.ugrad.cs.jhu.edu/~group4/final/twacker.png";
 	private final SearchServiceAsync queryService = GWT
 			.create(SearchService.class);
-	private final AuthServiceAsync authService = GWT.create(AuthService.class);
-
-	// Picture and mainPanels
-	private Image logoImage = new Image(logoURL);
-	private HorizontalPanel superPanel = new HorizontalPanel();
-	private VerticalPanel leftSidePanel = new VerticalPanel();
-	private VerticalPanel rightSidePanel = new VerticalPanel();
+	// private final AuthServiceAsync authService =
+	// GWT.create(AuthService.class);
 
 	// Left side Panel Widgets
 	private Hyperlink signInUp = new Hyperlink("Sign-in", "AUTH");
@@ -56,7 +50,7 @@ public class HomeView extends View
 	private Hyperlink personalHistory = new Hyperlink("Personal History",
 			"HISTORY");
 	private HorizontalPanel signPanel = new HorizontalPanel();
-	private Label signInStatusLabel = new Label();
+	// private Label signInStatusLabel = new Label();
 
 	// TabPanel and Widgets
 	private TabPanel resultsTab = new TabPanel();
@@ -79,12 +73,7 @@ public class HomeView extends View
 	 */
 	public HomeView()
 	{
-		logoImage.getElement().getStyle().setWidth(700, Unit.PX);
-		logoImage.getElement().getStyle().setHeight(100, Unit.PX);
-
-		rightSidePanel.add(logoImage);
-		rightSidePanel.setWidth("700px");
-		rightSidePanel.setBorderWidth(1);
+		super();
 
 		if (isSignedIn()) {
 			signPanel.setSpacing(10);
@@ -96,7 +85,6 @@ public class HomeView extends View
 		}
 
 		leftSidePanel.add(signPanel);
-		leftSidePanel.setWidth("200px");
 
 		boxPanel.add(searchBox);
 		boxPanel.add(searchBox2);
@@ -214,13 +202,6 @@ public class HomeView extends View
 		searchBox.addKeyUpHandler(handler);
 		searchBox2.addKeyUpHandler(handler);
 		searchBox3.addKeyUpHandler(handler);
-
-		superPanel.add(leftSidePanel);
-		superPanel.add(rightSidePanel);
-		superPanel.setBorderWidth(4);
-		// superPanel.setWidth("900px");
-
-		initWidget(superPanel);
 	}
 
 	/**

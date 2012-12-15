@@ -20,10 +20,11 @@ import edu.jhu.twacker.client.service.AuthService;
 import edu.jhu.twacker.client.service.AuthServiceAsync;
 
 /**
- * Simple view to sign out a user & redirect to the HOMEPAGE
- * under the "guest" account
+ * Simple view to sign out a user & redirect to the HOMEPAGE under the "guest"
+ * account
+ * 
  * @author Disa Mhembere
- *
+ * 
  */
 public class SignOutView extends View
 {
@@ -33,18 +34,20 @@ public class SignOutView extends View
 	private Button imFeelingLuckyButton;
 	private Hyperlink returnToHome;
 	private HorizontalPanel buttonPanel;
-	
+
 	/**
 	 * Default constructor
 	 */
 	public SignOutView()
 	{
+		super();
 		mainPanel = new VerticalPanel();
 		buttonPanel = new HorizontalPanel();
 		signOutButton = new Button("Sign Out");
-		returnToHome = new Hyperlink("Don't want to sign out? Return to Home","HOME");
+		returnToHome = new Hyperlink("Don't want to sign out? Return to Home",
+				"HOME");
 		imFeelingLuckyButton = new Button("I'm Feeling Lucky");
-		
+
 		mainPanel.setSpacing(20);
 		buttonPanel.setSpacing(10);
 		buttonPanel.add(signOutButton);
@@ -52,51 +55,50 @@ public class SignOutView extends View
 		mainPanel.add(buttonPanel);
 		mainPanel.add(returnToHome);
 		
-		initWidget(mainPanel);
-		
+		leftSidePanel.add(mainPanel);
+
+		// initWidget(mainPanel);
+
 		// Signout button handler
-		signOutButton.addClickHandler(new ClickHandler()
-		{
-			
+		signOutButton.addClickHandler(new ClickHandler() {
+
 			@Override
 			public void onClick(ClickEvent event)
 			{
 				signOutUser();
 			}
 		});
-		
+
 		// If you're feeling lucky you won't after this!
-		imFeelingLuckyButton.addClickHandler(new ClickHandler()
-		{
-			
+		imFeelingLuckyButton.addClickHandler(new ClickHandler() {
+
 			@Override
 			public void onClick(ClickEvent event)
 			{
-				 Window.alert("This ain't Google fool! Get outta here!");
+				Window.alert("This ain't Google fool! Get outta here!");
 			}
 		});
-		
+
 	}
-	
 
 	/**
 	 * Call to the service responsible for signing users out
 	 */
 	private void signOutUser()
 	{
-		authService.signOut(new AsyncCallback<String>()
-		{
+		authService.signOut(new AsyncCallback<String>() {
 			@Override
 			public void onSuccess(String result)
 			{
 				History.newItem("HOME"); // redirect to home
 			}
-			
+
 			@Override
 			public void onFailure(Throwable caught)
 			{
-				Log.debug("DM Failure: edu.jhu.twacker.client.view.SignOutView constructor" + caught.getLocalizedMessage());				
+				Log.debug("DM Failure: edu.jhu.twacker.client.view.SignOutView constructor"
+						+ caught.getLocalizedMessage());
 			}
 		});
-	}	
+	}
 }

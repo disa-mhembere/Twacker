@@ -28,6 +28,7 @@ import edu.jhu.twacker.shared.FieldVerifier;
 
 /**
  * Class to allow users to register for the Twacker website
+ * 
  * @author Disa Mhembere
  * 
  */
@@ -47,7 +48,8 @@ public class RegisterView extends View
 	private PasswordTextBox signUpPasswordBox = new PasswordTextBox();
 	private PasswordTextBox verifyPasswordBox = new PasswordTextBox();
 	private Button signUpButton = new Button("Sign-up");
-	private Button continueNoSignUpButton = new Button("I don't want to Sign-up");
+	private Button continueNoSignUpButton = new Button(
+			"Guest");
 
 	private Label emailLabel = new Label("Enter optional E-mail address");
 	private TextBox emailTextBox = new TextBox();
@@ -58,6 +60,7 @@ public class RegisterView extends View
 	 */
 	public RegisterView()
 	{
+		super();
 		usernameTextBox.setText("e.g gangnam");
 		infoLabel.setVisible(false);
 		emailTextBox.setText("someone@something.com");
@@ -84,23 +87,22 @@ public class RegisterView extends View
 		signUpPanel.add(accountAlreadyHyperlink);
 		signUpPanel.add(infoLabel);
 
-		initWidget(signUpPanel); // instantiate widget
+		leftSidePanel.add(signUpPanel);
+		// initWidget(signUpPanel); // instantiate widget
 
 		// Listen for mouse events on the sign-in button.
-		signUpButton.addClickHandler(new ClickHandler()
-		{
+		signUpButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event)
 			{
 				requestNewCredentials(firstNameTextBox.getText(),
 						lastNameTextBox.getText(), usernameTextBox.getText(),
-						signUpPasswordBox.getText(), verifyPasswordBox.getText(),
-						emailTextBox.getText());
+						signUpPasswordBox.getText(),
+						verifyPasswordBox.getText(), emailTextBox.getText());
 			}
 		});
 
-		continueNoSignUpButton.addClickHandler(new ClickHandler()
-		{
+		continueNoSignUpButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event)
 			{
@@ -121,50 +123,64 @@ public class RegisterView extends View
 	}
 
 	/**
-	 * Requests new user name and password from register service
-	 * after validating fields
-	 * @param firstName the users first name
-	 * @param lastName the users last name
-	 * @param username the requested username
-	 * @param pwd the requested password
-	 * @param confirmPwd matching the requested password <code>pwd</code>
-	 * @param email the users email address
+	 * Requests new user name and password from register service after
+	 * validating fields
+	 * 
+	 * @param firstName
+	 *            the users first name
+	 * @param lastName
+	 *            the users last name
+	 * @param username
+	 *            the requested username
+	 * @param pwd
+	 *            the requested password
+	 * @param confirmPwd
+	 *            matching the requested password <code>pwd</code>
+	 * @param email
+	 *            the users email address
 	 */
 	public void requestNewCredentials(String firstName, String lastName,
 			String username, String pwd, String confirmPwd, String email)
 	{
-		if (validateFields(firstName, lastName, username, pwd, confirmPwd, email))
-		{
-			registerService.registerUser(firstName, lastName, username, pwd, email, new AsyncCallback<Void>()
-			{
-				 
-				@Override
-				public void onSuccess(Void result)
-				{
-					infoLabel.setVisible(true);
-					infoLabel.setText("Success!");
-					History.newItem("HOME");
-				}
-				
-				@Override
-				public void onFailure(Throwable caught)
-				{
-					infoLabel.setVisible(true);
-					infoLabel.setText("Username Already exists!");
-					//Log.debug("DM: Failure!");
-				}
-			});
-		}	
+		if (validateFields(firstName, lastName, username, pwd, confirmPwd,
+				email)) {
+			registerService.registerUser(firstName, lastName, username, pwd,
+					email, new AsyncCallback<Void>() {
+
+						@Override
+						public void onSuccess(Void result)
+						{
+							infoLabel.setVisible(true);
+							infoLabel.setText("Success!");
+							History.newItem("HOME");
+						}
+
+						@Override
+						public void onFailure(Throwable caught)
+						{
+							infoLabel.setVisible(true);
+							infoLabel.setText("Username Already exists!");
+							// Log.debug("DM: Failure!");
+						}
+					});
+		}
 	}
 
 	/**
 	 * Validate all input fields as being at least viable
-	 * @param firstName the users first name
-	 * @param lastName the users last name
-	 * @param username the requested username
-	 * @param pwd the requested password
-	 * @param confirmPwd matching the requested password <code>pwd</code>
-	 * @param email the users email address
+	 * 
+	 * @param firstName
+	 *            the users first name
+	 * @param lastName
+	 *            the users last name
+	 * @param username
+	 *            the requested username
+	 * @param pwd
+	 *            the requested password
+	 * @param confirmPwd
+	 *            matching the requested password <code>pwd</code>
+	 * @param email
+	 *            the users email address
 	 * @return true if all fields are OK else false
 	 */
 	public boolean validateFields(String firstName, String lastName,
@@ -173,53 +189,44 @@ public class RegisterView extends View
 
 		infoLabel.setVisible(false);
 		// Confirm valid first name
-		if (!FieldVerifier.isValidName(firstName))
-		{
+		if (!FieldVerifier.isValidName(firstName)) {
 			infoLabel.setVisible(true);
 			infoLabel.setText("Invalid First Name");
 			return false;
 		}
 
 		// Confirm valid last name
-		if (!FieldVerifier.isValidName(lastName))
-		{
+		if (!FieldVerifier.isValidName(lastName)) {
 			infoLabel.setVisible(true);
 			infoLabel.setText("Invalid Last Name");
 			return false;
 		}
 
 		// Confirm valid user name
-		if (!FieldVerifier.isValidUsername(username))
-		{
+		if (!FieldVerifier.isValidUsername(username)) {
 			infoLabel.setVisible(true);
-			if (username.length() < 3)
-			{
+			if (username.length() < 3) {
 				infoLabel.setText("Username too short. Min of 3 characters.");
-			} else
-			{
+			} else {
 				infoLabel
 						.setText("Invalid username. (Btdubz: No special characters/spaces)");
 			}
 			return false;
 		}
-		
+
 		// Confirm valid password
-		if (!FieldVerifier.isValidPassword(pwd))
-		{
+		if (!FieldVerifier.isValidPassword(pwd)) {
 			infoLabel.setVisible(true);
-			if (pwd.length() < 5)
-			{
+			if (pwd.length() < 5) {
 				infoLabel.setText("Password too short. Min 5 characters");
-			} else
-			{
+			} else {
 				infoLabel.setText("Invalid Password. (Btdubz: No spaces)");
 			}
 			return false;
 		}
 
 		// Confirm password matching
-		if (!pwd.equals(confirmPwd))
-		{
+		if (!pwd.equals(confirmPwd)) {
 			infoLabel.setVisible(true);
 			infoLabel.setText("Passwords do not match");
 			return false;
@@ -227,8 +234,7 @@ public class RegisterView extends View
 
 		// Confirm valid email address
 		if (!FieldVerifier.isValidEmail(email)
-				|| email.equalsIgnoreCase("someone@something.com"))
-		{
+				|| email.equalsIgnoreCase("someone@something.com")) {
 			infoLabel.setVisible(true);
 			infoLabel.setText("Invalid email address. Try again");
 			return false;
@@ -239,18 +245,17 @@ public class RegisterView extends View
 		return true;
 
 	}
-	
-	
+
 	/**
-	 * Used to return the value of the infoLabel
-	 * Mainly used for external testing
+	 * Used to return the value of the infoLabel Mainly used for external
+	 * testing
+	 * 
 	 * @return
 	 */
 	public String getInfoLabel()
 	{
 		return this.infoLabel.getText();
-		
+
 	}
-	
 
 }

@@ -1,5 +1,9 @@
 /** Twacker.css */
 
+.imageClick{
+	cursor: pointer;
+}
+
 
 h1 {
   font-size: 2em;
