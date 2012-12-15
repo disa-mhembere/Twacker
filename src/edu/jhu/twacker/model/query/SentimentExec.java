@@ -5,15 +5,12 @@
 package edu.jhu.twacker.model.query;
 
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ClientConnectionManager;
@@ -26,7 +23,6 @@ import org.apache.http.util.EntityUtils;
 import com.google.gson.Gson;
 
 import edu.jhu.twacker.model.query.alchemy.AlchemyReponseWrapper;
-import edu.jhu.twacker.model.query.alchemy.AlchemyResponse;
 import edu.jhu.twacker.model.query.sentiment140.Sentiment140Response;
 import edu.jhu.twacker.model.query.twitter.SearchTerm;
 import edu.jhu.twacker.model.query.twitter.tweet.Tweet;
@@ -92,16 +88,7 @@ public class SentimentExec extends QueryExec
 	 * Executes the query to search for the given String.
 	 */
 	public void run()
-	{
-//		analyzeTweets(getTweets());
-//		this.response = new AlchemyReponseWrapper(this.positive, this.negative, this.neutral, this.errors);
-		
-//		Random random = new Random();
-//		this.positive = random.nextInt(100);
-//		this.negative = random.nextInt(100);
-//		this.neutral = random.nextInt(20);
-//		this.errors = random.nextInt(10);
-		
+	{	
 		try 
 		{
 			Sentiment140Response response = sentiment140Analysis(getTweets());
@@ -109,17 +96,18 @@ public class SentimentExec extends QueryExec
 			this.negative = response.negative();
 			this.neutral = response.neutral();
 			
+			this.total = this.positive + this.neutral + this.negative;
+			
 			System.out.println(toString());
 		}
-		catch (ClientProtocolException e) 
+		catch (NullPointerException e)
 		{
-			e.printStackTrace();
+			this.positive = 0;
+			this.negative = 0;
+			this.neutral = 0;
+			this.total = 0;
 		}
-		catch (IOException e) 
-		{
-			e.printStackTrace();
-		}
-		
+
 		this.response = new AlchemyReponseWrapper(this.positive, this.negative, this.neutral, this.errors);
 	}
 	
@@ -152,72 +140,7 @@ public class SentimentExec extends QueryExec
 		return text;
 	}
 	
-	/**
-	 * Analyzes a list of Tweets for sentiment using the Alchemy API and stores
-	 * the counts of positive, neutral, and negative Tweets in their respective data members.
-	 * @param tweets The list of Tweets.
-	 */
-	public void analyzeTweets(List<String> tweets)
-	{
-		this.negative = 0;
-		this.neutral = 0;
-		this.positive = 0;
-		this.errors = 0;
-		
-		for (String tweet : tweets)
-		{
-			int result = getSentiment(tweet);
-			switch (result)
-			{
-				case -1:
-					this.negative++;
-					break;
-				case 0:
-					this.neutral++;
-					break;
-				case 1:
-					this.positive++;
-					break;
-				case -2:
-					this.errors++;
-				default:
-					break;
-			}
-		}	
-		
-		this.total = this.positive + this.neutral + this.negative;
-	}
-	
-	/**
-	 * Retrieves the sentiment of the text string. The sentiment analysis is done
-	 * through the Alchemy API ({@link http://www.alchemyapi.com/api/sentiment/}). The
-	 * result of the analysis is either -1 for negative, 0 for neutral, or 1 for positive.
-	 * If something goes wrong during analysis and it can't be completed, -2 will be
-	 * returned.
-	 * @param text The text to analyze. 
-	 * @return The code of the analysis.
-	 */
-	private int getSentiment(String text)
-	{	
-		AlchemyResponse response = alchemyAnalysis(text);
-		
-		if (response.getStatus().equals("ERROR"))
-			return -2;
-		
-		if (response.getDocSentiment() == null)
-			System.out.println("null");
-		
-		String result = response.getDocSentiment().getType();
-		
-		if (result.equals("positive"))
-			return 1;
-		else if (result.equals("neutral"))
-			return 0;
-		else
-			return -1;
-	}
-	
-	private Sentiment140Response sentiment140Analysis(List<String> tweets) throws ClientProtocolException, IOException
+	public Sentiment140Response sentiment140Analysis(List<String> tweets)
 	{	
 		List<String> newTweets = new ArrayList<String>();
 		for (String tweet : tweets)
@@ -230,6 +153,28 @@ public class SentimentExec extends QueryExec
 		
 		String body = this.packageTweets(tweets);
 		
+		HttpResponse response = this.sendHttpPostWithTweets(body);
+		
+		Gson gson = new Gson();
+		
+		try
+		{
+			return gson.fromJson(EntityUtils.toString(response.getEntity()), Sentiment140Response.class);
+		}
+		catch (Exception e)
+		{
+			// something bad went wrong and we can't recover
+			return null;
+		}
+	}
+	
+	/**
+	 * Performs the http post with the body contents as the Tweets to the Sentiment140 API.
+	 * @param body The tweets to set as the body of the response.
+	 * @return The HttpResponse.
+	 */
+	private HttpResponse sendHttpPostWithTweets(String body)
+	{
 		// form the connection
 		// comment this section out if running locally
 		HttpParams httpParams = new BasicHttpParams();
@@ -242,14 +187,18 @@ public class SentimentExec extends QueryExec
 		HttpPost post = new HttpPost("http://www.sentiment140.com/api/bulkClassifyJson");
 		
 		// add the Tweets to the body
-		StringEntity se = new StringEntity(body);
-		post.setEntity(se);
-		
-		// get the response
-		HttpResponse response = client.execute(post);		
+		try
+		{
+			StringEntity se = new StringEntity(body);
+			post.setEntity(se);
 
-		Gson gson = new Gson();
-		return gson.fromJson(EntityUtils.toString(response.getEntity()), Sentiment140Response.class);
+			return client.execute(post);
+		}
+		catch (Exception e)
+		{
+			// probably cannot recover. No data.
+			return null;
+		}
 	}
 	
 	private String packageTweets(List<String> tweets)
@@ -264,31 +213,6 @@ public class SentimentExec extends QueryExec
 		
 		return json;
 	}
-	
-	/**
-	 * Performs the analysis with the Alchemy API. 
-	 * @param tweets The String to analyze.
-	 * @return The result of the analysis in the form of the xml String
-	 * provided by the API.
-	 */
-	private AlchemyResponse alchemyAnalysis(String tweet)
-	{
-		try
-		{
-			String encoded = URLEncoder.encode(tweet, "UTF-8");
-
-			HttpGetWrapper get = new HttpGetWrapper("http://access.alchemyapi.com/calls/text/TextGetTextSentiment?apikey=fd4235d2b727b25906b6427509178a9c86911876&text=" +
-					encoded + "&outputMode=json");
-			
-			Gson gson = new Gson();
-			return gson.fromJson(get.get(), AlchemyResponse.class);
-		}
-		catch (Exception e)
-		{
-			
-		}
-		return null;
-	} 
 
 	/**
 	 * Creates a JSON representation of the results from this query.

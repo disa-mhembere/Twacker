@@ -29,10 +29,19 @@ public class TwackerModel
 	 */
 	private List<QueryExec> executers = new ArrayList<QueryExec>();
 	
+	/**
+	 * The tool which gets the histogram data.
+	 */
 	private HistogramExec histogram;
 	
+	/**
+	 * The tool which gets the sentiment data.
+	 */
 	private SentimentExec sentiment;
 	
+	/**
+	 * The tool which gets the experts data.
+	 */
 	private ExpertsExec experts;
 	
 	/**

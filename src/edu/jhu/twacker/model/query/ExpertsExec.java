@@ -53,8 +53,17 @@ public class ExpertsExec extends QueryExec
 		
 		ExpertsQuery response = gson.fromJson(wrapper.get(), ExpertsQuery.class);
 			
-		this.results = ((ExpertsResponse) response.getResponse());
-		this.experts = this.results.getList();
+		try
+		{
+			this.results = ((ExpertsResponse) response.getResponse());
+			this.experts = this.results.getList();
+		}
+		catch (NullPointerException e)
+		{
+			// empty objects so their toString methods produce nothing
+			this.results = new ExpertsResponse();
+			this.experts = new ArrayList<Expert>();
+		}
 	}
 	
 	/**

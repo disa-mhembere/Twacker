@@ -34,8 +34,8 @@ public class SearchTerm
 		} 
 		catch (UnsupportedEncodingException e) 
 		{
+			// this should never happen, UTF-8 is supported
 			this.query = query;
-			e.printStackTrace();
 		}
 	}
 	

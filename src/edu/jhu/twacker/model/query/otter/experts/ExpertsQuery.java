@@ -19,8 +19,12 @@ public class ExpertsQuery implements OtterQuery
 	 */
 	private ExpertsResponse response;
 	
+	/**
+	 * The empty constructor.
+	 */
 	public ExpertsQuery()
 	{
+		
 	}
 	
 	/**
@@ -38,7 +42,7 @@ public class ExpertsQuery implements OtterQuery
 		} 
 		catch (UnsupportedEncodingException e) 
 		{
-			// TODO Auto-generated catch block
+			// this should never happen
 			e.printStackTrace();
 		}
 		
