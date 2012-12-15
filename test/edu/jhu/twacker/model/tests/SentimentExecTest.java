@@ -68,9 +68,9 @@ public class SentimentExecTest
 	public void test()
 	{
 		SentimentExec sentiment = new SentimentExec("Obama");
-		sentiment.analyzeTweets(this.tweets);
+		sentiment.sentiment140Analysis(this.tweets);
 		
-		if (!sentiment.toString().equals("\"sentiment\": { \"positive\" : \"13\", \"neutral\" : \"5\", \"negative\" : \"8\", \"total\" : \"26\", \"errors\": \"3\" }"))
+		if (!sentiment.toString().equals("\"sentiment\": { \"positive\" : \"1\", \"negative\" : \"21\", \"neutral\" : \"77\", \"total\" : \"0\", \"errors\": \"0\" }"))
 			fail("analyzeTweets method failed to analyze correctly.");
 	}
 

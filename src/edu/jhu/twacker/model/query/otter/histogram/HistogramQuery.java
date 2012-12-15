@@ -31,6 +31,9 @@ public class HistogramQuery implements OtterQuery
 	 */
 	private HistogramResponse response;
 	
+	/**
+	 * The empty constructor.
+	 */
 	public HistogramQuery()
 	{
 		
@@ -48,7 +51,7 @@ public class HistogramQuery implements OtterQuery
 		} 
 		catch (UnsupportedEncodingException e) 
 		{
-			// TODO Auto-generated catch block
+			// this should never happen
 			e.printStackTrace();
 		}
 		this.request = new OtterRequest(new HistogramParameters(), "searchhistogram");

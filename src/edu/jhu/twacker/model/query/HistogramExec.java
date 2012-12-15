@@ -74,7 +74,8 @@ public class HistogramExec extends QueryExec
 		}
 		catch (Exception e)
 		{
-			System.out.println(e);
+			// recover by returning no data
+			this.results = "[]";
 		}
 	}
 	

@@ -64,7 +64,6 @@ public class HttpGetWrapper
 		
 		// uncomment this section if you are running this locally
 //		this.url = url;
-//		
 //		this.client = new DefaultHttpClient();
 //		this.get = new HttpGet(this.url);
 	}
@@ -95,12 +94,12 @@ public class HttpGetWrapper
 		}
 		catch (ParseException e)
 		{
-			// TODO Auto-generated catch block
+			// can't recover
 			e.printStackTrace();
 		}
 		catch (IOException e)
 		{
-			// TODO Auto-generated catch block
+			// can't recover
 			e.printStackTrace();
 		}
 		return null;
@@ -150,12 +149,12 @@ public class HttpGetWrapper
 		}
 		catch (IllegalStateException e)
 		{
-			// TODO Auto-generated catch block
+			// can't recover
 			e.printStackTrace();
 		}
 		catch (IOException e)
 		{
-			// TODO Auto-generated catch block
+			// can't recover
 			e.printStackTrace();
 		}
 		return null;

@@ -105,8 +105,6 @@ public class HistogramResponse implements OtterResponse
 		for (Integer i : this.histogram)
 			list.addFirst(i);
 		return list.toString();
-//		return "Histogram: " + this.slice + " seconds per slice, " + 
-//				this.period + " slices\n" + list;
 	}
 
 }
