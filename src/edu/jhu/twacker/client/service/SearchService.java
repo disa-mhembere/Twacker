@@ -37,5 +37,5 @@ public interface SearchService extends RemoteService {
 	 * @param date the date requested
 	 * @return a Map with a list of strings containing all searches of a chosen day
 	 */
-	public Map<Date,List<String>> getDaySearches(Date date);
+	public Map<Date,List<String>> getDaySearches(Date date);	
 }

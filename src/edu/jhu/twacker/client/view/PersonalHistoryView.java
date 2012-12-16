@@ -42,7 +42,6 @@ public class PersonalHistoryView extends View
 	private Button submitButton;
 	private Button searchAllButton;
 	private HorizontalPanel buttonPanel;
-//	private VerticalPanel histPanel;
 
 	// data objects
 	private Map<Date, String> allSearchesMap = new HashMap<Date, String>();
@@ -60,7 +59,6 @@ public class PersonalHistoryView extends View
 	public PersonalHistoryView()
 	{
 		super();
-//		histPanel = new VerticalPanel();
 		calendar = new DatePicker();
 		calendar.setWidth("200px");
 		buttonPanel = new HorizontalPanel();
@@ -76,14 +74,6 @@ public class PersonalHistoryView extends View
 		leftSidePanel.add(buttonPanel);
 		rightSidePanel.add(searchLabel);
 		
-//		histPanel.add(calendar);
-//		histPanel.add(buttonPanel);
-
-//		histPanel.add(searchLabel);
-
-//		leftSidePanel.add(histPanel);
-		// initWidget(histPanel);
-
 		/*
 		 * Handle calendar events
 		 */

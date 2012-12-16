@@ -61,7 +61,6 @@ public class RegisterView extends View
 	{
 		super();
 		infoLabel.setVisible(false);
-//		emailTextBox.setText("someone@something.com");
 
 		// Assemble sign-up panel
 		signUpPanel.add(new Label("Sign-up!"));
@@ -83,11 +82,9 @@ public class RegisterView extends View
 		buttonPanel.setWidget(0, 1, continueNoSignUpButton);
 		signUpPanel.add(buttonPanel);
 		signUpPanel.add(accountAlreadyHyperlink);
-		//signUpPanel.add(infoLabel);
 
 		rightSidePanel.add(infoLabel);
 		leftSidePanel.add(signUpPanel);
-		// initWidget(signUpPanel); // instantiate widget
 
 		// Listen for mouse events on the sign-in button.
 		signUpButton.addClickHandler(new ClickHandler() {
@@ -258,6 +255,7 @@ public class RegisterView extends View
 	}
 	
 	@Override
+	// TODO : AT Comment on this
 	public void updateView()
 	{
 		super.updateView();

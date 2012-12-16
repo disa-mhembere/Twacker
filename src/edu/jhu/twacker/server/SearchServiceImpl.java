@@ -111,6 +111,9 @@ public class SearchServiceImpl extends RemoteServiceServlet implements
 		} catch (Exception e)
 		{
 			// DM OK to return empty hashMap
+		}finally
+		{
+			pm.close();
 		}
 		return result;
 	}

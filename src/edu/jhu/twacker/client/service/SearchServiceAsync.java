@@ -38,5 +38,4 @@ public interface SearchServiceAsync {
 	 * @see edu.jhu.twacker.client.service.SearchService#getDaySearches(java.util.Map<java.util.Date, java.lang.String>)
 	 */
 	void getDaySearches(Date newParam, AsyncCallback<Map<Date, List<String>>> callback);
-
 }

@@ -210,7 +210,6 @@ public class AuthView extends View
 			});
 		}
 
-		// TODO DM: If I get down here clear the fields of the form
 	}
 
 	/**

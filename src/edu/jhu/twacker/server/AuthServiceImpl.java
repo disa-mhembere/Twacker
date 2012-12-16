@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import edu.jhu.twacker.client.service.AuthService;
 import edu.jhu.twacker.server.data.Users;
 import edu.jhu.twacker.shared.exceptions.NotSignedInException;
+import edu.jhu.twacker.shared.security.BCrypt;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -65,18 +66,28 @@ public class AuthServiceImpl extends RemoteServiceServlet implements
 	{
 		PersistenceManager pm = PMF.getPersistenceManager(); 
 		Query q = pm.newQuery(Users.class);
-		q.setFilter("username == usernameParam && password == passwordParam");
+		q.setFilter("username == usernameParam");
 
-		q.declareParameters("String usernameParam, String passwordParam");
+		q.declareParameters("String usernameParam");
 
 		try
 		{
 			@SuppressWarnings("unchecked")
-			List<Users> authenticatedUser = (List<Users>) q.execute(username, password);
-			if (authenticatedUser.size() > 0) // This guy is in the DB
+			List<Users> authenticatedUser = (List<Users>) q.execute(username);
+			
+			// Since there is only 1 value since Username is primary key
+			if (authenticatedUser.size() == 0)
 			{
-				setUsername(username); // Set session username
-				return getUsername(); // Return session username
+				; // Do nothing
+			}
+			
+			else
+			{
+				if (BCrypt.checkpw(password, authenticatedUser.get(0).getPassword()))
+				{
+					setUsername(username); // Set session username
+					return getUsername(); // Return session username
+				}
 			}
 		} finally
 		{

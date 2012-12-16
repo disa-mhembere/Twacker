@@ -38,3 +38,13 @@ h1 {
 #closeButton {
   margin: 15px 6px 6px;
 }
+
+/*Background image*/
+#mid {
+    background-image:url("http://non-intervention.com/wp-content/uploads/2009/12/Twitter-Blue-Transparent-t-3D-Button-Logo.png");
+    opacity: 0.2;
+    background-position:center;
+    background-repeat: no-repeat;
+    width:1200px;
+    height:700px;
+}

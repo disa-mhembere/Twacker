@@ -57,8 +57,6 @@ public class SignOutView extends View
 		
 		leftSidePanel.add(mainPanel);
 
-		// initWidget(mainPanel);
-
 		// Signout button handler
 		signOutButton.addClickHandler(new ClickHandler() {
 

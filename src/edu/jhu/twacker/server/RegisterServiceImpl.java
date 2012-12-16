@@ -20,6 +20,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import edu.jhu.twacker.client.service.RegisterService;
 import edu.jhu.twacker.server.data.Users;
 import edu.jhu.twacker.shared.exceptions.userExistsException;
+import edu.jhu.twacker.shared.security.BCrypt;
 
 /**
  * This class implements the register service by attempting to add
@@ -56,8 +57,8 @@ public class RegisterServiceImpl extends RemoteServiceServlet implements Registe
 			PersistenceManager pm = getPersistenceManager();
 			try
 			{
-				pm.makePersistent(new Users(firstName, lastName, username, password,
-						email));
+				pm.makePersistent(new Users(firstName, lastName, username,
+						BCrypt.hashpw(password, BCrypt.gensalt()), email)); // Hash password for security
 				setUsername(username); 
 			} finally
 			{

@@ -134,34 +134,4 @@ public class ViewManager implements ValueChangeHandler<String>
 		}
 		setBody(view);
 	}
-
-	// /**
-	// * Determine if a user is signed in or we are operating under a guest
-	// account
-	// * @return true if user is signed in else false
-	// */
-	// private boolean isUserSignedIn()
-	// {
-	// authService.isSignedIn(new AsyncCallback<Boolean>()
-	// {
-	//
-	// @Override
-	// public void onSuccess(Boolean result)
-	// {
-	// signedIn = result;
-	// }
-	//
-	// @Override
-	// public void onFailure(Throwable caught)
-	// {
-	// signedIn = false;
-	// // Log.debug("DM :Failure edu.jhu.twacker.client.HomeView.isUserSignedIn"
-	// // + caught.getLocalizedMessage());
-	// }
-	//
-	// });
-	//
-	// return signedIn;
-	// }
-
 }
