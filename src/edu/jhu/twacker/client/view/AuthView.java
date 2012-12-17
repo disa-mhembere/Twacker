@@ -209,7 +209,10 @@ public class AuthView extends View
 				}
 			});
 		}
+<<<<<<< HEAD
 
+=======
+>>>>>>> 11c1086808d3ac2665951a9d782f9a4114c7e31a
 	}
 
 	/**

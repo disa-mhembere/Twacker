@@ -4,7 +4,7 @@
  */
 package edu.jhu.twacker.client.view;
 
-import com.allen_sauer.gwt.log.client.Log;
+//import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -94,8 +94,9 @@ public class SignOutView extends View
 			@Override
 			public void onFailure(Throwable caught)
 			{
-				Log.debug("DM Failure: edu.jhu.twacker.client.view.SignOutView constructor"
-						+ caught.getLocalizedMessage());
+				Window.Location.reload(); // reload page and try again
+//				Log.debug("DM Failure: edu.jhu.twacker.client.view.SignOutView constructor"
+//						+ caught.getLocalizedMessage());
 			}
 		});
 	}
