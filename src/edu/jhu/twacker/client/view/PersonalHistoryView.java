@@ -16,6 +16,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.i18n.shared.DateTimeFormat;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -26,7 +27,7 @@ import com.google.gwt.user.datepicker.client.DatePicker;
 import edu.jhu.twacker.client.service.SearchService;
 import edu.jhu.twacker.client.service.SearchServiceAsync;
 
-import com.allen_sauer.gwt.log.client.Log;
+//import com.allen_sauer.gwt.log.client.Log;
 
 /**
  * This view's purpose is to allow users to query their past search history
@@ -166,8 +167,9 @@ public class PersonalHistoryView extends View
 					@Override
 					public void onFailure(Throwable caught)
 					{
-						Log.debug("DM getAllSearches onFailure: "
-								+ caught.getMessage()); // Debug
+						Window.Location.reload(); // Something wen't wrong. Reload and re-try
+//						Log.debug("DM getAllSearches onFailure: "
+//								+ caught.getMessage()); // Debug
 					}
 				});
 		return singleDaySearchesMap;
@@ -205,8 +207,8 @@ public class PersonalHistoryView extends View
 					@Override
 					public void onFailure(Throwable caught)
 					{
-						Log.debug("DM getAllSearches onFailure: "
-								+ caught.getMessage()); // Debug
+//						Log.debug("DM getAllSearches onFailure: "
+//								+ caught.getMessage()); // Debug
 					}
 				});
 
