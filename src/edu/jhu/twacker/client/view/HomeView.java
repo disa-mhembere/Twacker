@@ -119,14 +119,17 @@ public class HomeView extends View
 		rightSidePanel.add(saveStatusLabel);
 		rightSidePanel.add(resultsTab);
 
-		// Create a handler for the sendButton and nameField
+		/**
+		 *	Inner Class that provides Handlers for the searchBox
+		 */
 		class SearchButtonHandler implements ClickHandler, KeyUpHandler
 		{
 
 			private LinkedList<String> searchTerms;
 
 			/**
-			 * Fired when the user clicks on the sendButton.
+			 * 	Registers the button click and submits the search terms.
+			 * 	@param event	the button click event
 			 */
 			public void onClick(ClickEvent event)
 			{
@@ -147,11 +150,13 @@ public class HomeView extends View
 						saveSearchTerm(searchBox3.getText());
 					}
 					sendQueryToServer(searchTerms);
+					searchButton.setEnabled(false);
 				}
 			}
 
 			/**
-			 * Fired when the user types in the nameField.
+			 * 	Submits search terms upon pressing enter.
+			 * 	@param	event	The key press event
 			 */
 			public void onKeyUp(KeyUpEvent event)
 			{
@@ -161,8 +166,10 @@ public class HomeView extends View
 			}
 
 			/**
-			 * Send the name from the nameField to the server and wait for a
-			 * response.
+			 * 	Submits each of the user's search terms to the server
+			 * 	through the queryServer service. Displays graph upon
+			 * 	receiving all callbacks.
+			 * 	@param searchTerms	The user's entered search terms.
 			 */
 			private void sendQueryToServer(final LinkedList<String> searchTerms)
 			{
@@ -172,10 +179,21 @@ public class HomeView extends View
 
 				for (String s : searchTerms) {
 					queryService.queryServer(s, new AsyncCallback<String>() {
+						/**
+						 * 	Twacker analysis failed
+						 * 	@param	caught the Throwable from the server.
+						 */
 						public void onFailure(Throwable caught)
 						{
+							ChartManager.plusCount();	//increment the number of callbacks
+							onEither();
 						}
 
+						/**
+						 * 	Twacker Analysis was successful and graphs
+						 * 	will be created.
+						 * 	@param result The JSON formated data string from the server.
+						 */
 						public void onSuccess(String result)
 						{
 							infoLabel.setText("");
@@ -185,19 +203,33 @@ public class HomeView extends View
 								expertsPanel.clear();
 							}
 
-							ChartManager.updateTable(result);
-							sentimentPanel.add(ChartManager
-									.createPieChart(result));
-							expertsPanel.add(ChartManager
-									.createExpertsPanel(result), result
-									.substring(result.indexOf(": \"") + 3,
-											result.indexOf("\",")));
+							ChartManager.updateTable(result);	//add data to the LineChart data table;
+							
+							/* create pie chart and experts if result contains data */
+							if (!result.contains("\"experts\" : []")) {
+								sentimentPanel.add(ChartManager
+										.createPieChart(result));
+								
+								expertsPanel.add(ChartManager
+										.createExpertsPanel(result), result
+										.substring(result.indexOf(": \"") + 3,
+												result.indexOf("\",")));
+							}
+							onEither();
+						}
+						
+						/**
+						 * 	Creates the line chart and shows the results on getting the final
+						 * 	callback, whether or not there were successes or failures.
+						 */
+						public void onEither() {
 							if (ChartManager.getCount() == searchTerms.size()) {
 								histogramPanel.add(ChartManager
-										.createLineChart(result));
+										.createLineChart());
 								resultsTab.setVisible(true);
 								resultsTab.selectTab(0);
 								saveStatusLabel.setText("");
+								searchButton.setEnabled(true);
 							}
 						}
 					});
