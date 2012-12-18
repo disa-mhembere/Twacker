@@ -1,5 +1,15 @@
 /** Twacker.css */
 
+.tableColumn{
+	text-align:center;
+	width:8em;
+}
+
+.tableHeader{
+	border: 1px solid black;
+	margin: 6px;
+}
+
 .preClickTextBox{
 	color: gray;
 }

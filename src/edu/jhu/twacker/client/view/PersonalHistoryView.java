@@ -6,9 +6,11 @@ package edu.jhu.twacker.client.view;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -19,6 +21,7 @@ import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 //import com.google.gwt.user.client.ui.VerticalPanel;
@@ -43,10 +46,12 @@ public class PersonalHistoryView extends View
 	private Button submitButton;
 	private Button searchAllButton;
 	private HorizontalPanel buttonPanel;
+	private FlexTable resultsTable;
+	private Map<String, Integer> datesOnTable = new LinkedHashMap<String, Integer>();
 
 	// data objects
-	private Map<Date, String> allSearchesMap = new HashMap<Date, String>();
-	private Map<Date, String> singleDaySearchesMap = new HashMap<Date, String>();
+	private Map<Date, String> allSearchesMap = new LinkedHashMap<Date, String>();
+	private Map<Date, String> singleDaySearchesMap = new LinkedHashMap<Date, String>();
 	private Date singleSearchDate = new Date(System.currentTimeMillis());
 	private Label searchLabel = new Label("");
 
@@ -64,17 +69,25 @@ public class PersonalHistoryView extends View
 		calendar.setWidth("200px");
 		buttonPanel = new HorizontalPanel();
 
+		resultsTable = new FlexTable();
+		resultsTable.setText(0, 0, "Date");
+		resultsTable.setText(0, 1, "Searches");
+		resultsTable.addStyleName("tableHeader");
+		resultsTable.getCellFormatter().addStyleName(0,0, "tableColumn");
+		resultsTable.getCellFormatter().addStyleName(0,1, "tableColumn");
+		
+
 		submitButton = new Button("Submit Search");
 		searchAllButton = new Button("See all history");
 
 		buttonPanel.add(submitButton);
 		buttonPanel.add(searchAllButton);
 
-		
 		leftSidePanel.add(calendar);
 		leftSidePanel.add(buttonPanel);
 		rightSidePanel.add(searchLabel);
-		
+		rightSidePanel.add(resultsTable);
+
 		/*
 		 * Handle calendar events
 		 */
@@ -135,31 +148,38 @@ public class PersonalHistoryView extends View
 					@Override
 					public void onSuccess(Map<Date, List<String>> result)
 					{
-						String s = "";
-
-						for (List<String> searchLists : result.values()) {
-							ArrayList<String> searchArrayLists = new ArrayList<String>(
-									searchLists);
-							for (String st : searchArrayLists) {
-								s += st + ", ";
+						for (Date d: result.keySet()){
+							String dateString = dateFormat.format(d);
+							if (!datesOnTable.containsKey(dateString)){
+								String s = "";
+								ArrayList<String> searchArrayLists = new ArrayList<String>(result.get(d));
+								for (String st : searchArrayLists){
+									s += st + ", ";
+								}
+								
+								int newRowNumber = resultsTable.getRowCount();
+								resultsTable.setText(newRowNumber, 0, dateString);
+								resultsTable.setText(newRowNumber, 1, s);
+								datesOnTable.put(dateString, newRowNumber);	
+							} else { 
+								int rowNumber = datesOnTable.get(dateString);
+								String s = resultsTable.getText(rowNumber, 1);
+								ArrayList<String> searchArrayLists = new ArrayList<String>(result.get(d));
+								for (String st : searchArrayLists){
+									s += st + ", ";
+								}
+								resultsTable.setText(rowNumber, 1, s);
 							}
 						}
-
-						if (s == "") {
-							s = "No History!";
-						}
-						searchLabel.setText(dateFormat
-								.format(getSingleSearchDate())
-								+ " Searches: "
-								+ s);
 					}
 
 					@Override
 					public void onFailure(Throwable caught)
 					{
-						Window.Location.reload(); // Something wen't wrong. Reload and re-try
-//						Log.debug("DM getAllSearches onFailure: "
-//								+ caught.getMessage()); // Debug
+						Window.Location.reload(); // Something wen't wrong.
+													// Reload and re-try
+						// Log.debug("DM getAllSearches onFailure: "
+						// + caught.getMessage()); // Debug
 					}
 				});
 		return singleDaySearchesMap;
@@ -177,28 +197,38 @@ public class PersonalHistoryView extends View
 					@Override
 					public void onSuccess(Map<Date, List<String>> result)
 					{
-						String s = "";
-
-						for (List<String> searchLists : result.values()) {
-							ArrayList<String> searchArrayLists = new ArrayList<String>(
-									searchLists);
-							for (String st : searchArrayLists) {
-								s += st + ", ";
+						SortedSet<Date> sortedDates = new TreeSet<Date>(result.keySet());
+						for (Date d: sortedDates){
+							String dateString = dateFormat.format(d);
+							
+							if (!datesOnTable.containsKey(dateString)){
+								String s = "";
+								ArrayList<String> searchArrayLists = new ArrayList<String>(result.get(d));
+								for (String st : searchArrayLists){
+									s += st + ", ";
+								}
+								
+								int newRowNumber = resultsTable.getRowCount();
+								resultsTable.setText(newRowNumber, 0, dateString);
+								resultsTable.setText(newRowNumber, 1, s);
+								datesOnTable.put(dateString, newRowNumber);	
+							} else { 
+								int rowNumber = datesOnTable.get(dateString);
+								String s = resultsTable.getText(rowNumber, 1);
+								ArrayList<String> searchArrayLists = new ArrayList<String>(result.get(d));
+								for (String st : searchArrayLists){
+									s += st + ", ";
+								}
+								resultsTable.setText(rowNumber, 1, s);
 							}
 						}
-
-						if (s == "") {
-							s = "No History!";
-						}
-						searchLabel.setText("All Searches:" + s);
-						// Log.debug(historyService + "s value: " + s);
 					}
 
 					@Override
 					public void onFailure(Throwable caught)
 					{
-//						Log.debug("DM getAllSearches onFailure: "
-//								+ caught.getMessage()); // Debug
+						// Log.debug("DM getAllSearches onFailure: "
+						// + caught.getMessage()); // Debug
 					}
 				});
 

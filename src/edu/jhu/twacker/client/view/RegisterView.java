@@ -34,7 +34,6 @@ import edu.jhu.twacker.shared.FieldVerifier;
  */
 public class RegisterView extends View
 {
-
 	private final RegisterServiceAsync registerService = GWT
 			.create(RegisterService.class);
 	Hyperlink accountAlreadyHyperlink = new Hyperlink(
@@ -254,8 +253,10 @@ public class RegisterView extends View
 
 	}
 	
+	/**
+	 * This overriden method resets all the fields to empty after we navigate away from the page.
+	 */
 	@Override
-	// TODO : AT Comment on this
 	public void updateView()
 	{
 		super.updateView();

@@ -37,6 +37,9 @@ public class View extends Composite
 	protected VerticalPanel leftSidePanel = new VerticalPanel();
 	protected VerticalPanel rightSidePanel = new VerticalPanel();
 
+	/**
+	 * This is the constructor for the base elements in every single view.
+	 */
 	protected View()
 	{
 		logoImage.getElement().getStyle().setWidth(700, Unit.PX);

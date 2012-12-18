@@ -251,6 +251,9 @@ public class AuthView extends View
 		return true;
 	}
 
+	/**
+	 * This method resets the page defaults when we revisit it after navigating away.
+	 */
 	@Override
 	public void updateView()
 	{
