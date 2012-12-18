@@ -263,4 +263,15 @@ public class AuthView extends View
 		infoLabel.setText("");
 		signInPasswordBox.setText("");
 	}
+	
+	/**
+	 * Used to return the value of the infoLabel Mainly used for external
+	 * testing
+	 * 
+	 * @return
+	 */
+	public String getInfoLabel()
+	{
+		return this.infoLabel.getText();
+	}
 }

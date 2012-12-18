@@ -166,10 +166,34 @@ public class FieldVerifierTest
 	}
 
 	/**
-	 * TODO: AL
+	 * Test whether the {@link FieldVerifier} <code> isValidSearch </code> method
+	 * properly excludes illegal searches.
 	 */
 	private void testIsValidSearch()
 	{
+		String goodsearch1 = "Obama";
+		String goodsearch2 = "testing";
 
+		String badSearch1 = "";
+		String badSearch2 = "aa";
+		String badSearch3 = null;
+		String badSearch4 = FieldVerifier.PRIMARY_DEFAULT;
+		String badSearch5 = FieldVerifier.SECONDARY_DEFAULT;
+		
+		if (!(FieldVerifier.isValidName(goodsearch1)
+				&& FieldVerifier.isValidName(goodsearch2)))
+		{
+			fail("Failure on valid serch : testing FieldVerifier.isValidSearch");
+		}
+
+		if (FieldVerifier.isValidName(badSearch1)
+				|| FieldVerifier.isValidName(badSearch2)
+				|| FieldVerifier.isValidName(badSearch3)
+				|| FieldVerifier.isValidName(badSearch4)
+				|| FieldVerifier.isValidName(badSearch5)
+				)
+		{
+			fail("Failure on illegal search : testing FieldVerifier.isValidSearch");
+		}
 	}
 }
