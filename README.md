@@ -1,12 +1,18 @@
 Twacker
 =======
 
-Twitter tracker
+Twitter tracker JHU OOSE Project. Google Web Toolkit project for graphical representations of aggregate Twitter data hosted as a web application found at 
+[twacker-oose.appspot.com](twacker-oose.appspot.com)
 
-Daniel Deutsch
-Alexander Long
-Andy Tien
-Disa Mhembere
+Dependencies to build:
+======================
+[Google Web Toolkit](http://www.gwtproject.org/)
 
-JHU OOSE Project. Graphical representations of aggregate Twitter data presented as a web application found at 
-twacker-oose.appspot.com
+Team members:
+-------------
+- Daniel Deutsch
+- Alexander Long
+- Andy Tien
+- Disa Mhembere
+
+
