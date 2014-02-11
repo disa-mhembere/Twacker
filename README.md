@@ -2,7 +2,7 @@ Twacker
 =======
 
 Twitter tracker JHU OOSE Project. Google Web Toolkit project for graphical representations of aggregate Twitter data hosted as a web application found at 
-[twacker-oose.appspot.com](twacker-oose.appspot.com)
+[twacker-oose.appspot.com](http://twacker-oose.appspot.com)
 
 Dependencies to build:
 ======================
